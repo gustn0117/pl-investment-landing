@@ -3,7 +3,6 @@ import SectionHeader from "@/components/SectionHeader";
 import CTA from "@/components/CTA";
 import InquiryForm from "@/components/InquiryForm";
 import ChartBg from "@/components/ChartBg";
-import TickerTape from "@/components/TickerTape";
 import Sparkline from "@/components/Sparkline";
 import OrbitalAccent from "@/components/OrbitalAccent";
 import CandlestickField from "@/components/CandlestickField";
@@ -224,9 +223,6 @@ export default async function Home() {
           </div>
         </div>
       </section>
-
-      {/* MARKET TICKER */}
-      <TickerTape />
 
       {/* LOGO BADGE STRIP */}
       <section className="relative bg-ink-950 border-y border-gold-500/10">
