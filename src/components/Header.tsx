@@ -48,8 +48,8 @@ export default function Header() {
     <header
       className={`fixed top-0 inset-x-0 z-50 transition-all ${
         scrolled
-          ? "bg-white/90 backdrop-blur-md border-b border-gold-200/60 shadow-[0_2px_20px_-10px_rgba(191,145,64,0.25)]"
-          : "bg-white/70 backdrop-blur-sm border-b border-transparent"
+          ? "bg-ink-950/80 backdrop-blur-xl border-b border-gold-500/10 shadow-[0_2px_30px_-15px_rgba(0,0,0,0.8)]"
+          : "bg-ink-950/40 backdrop-blur-md border-b border-transparent"
       }`}
     >
       <div className="container-x flex h-16 md:h-20 items-center justify-between">
@@ -59,7 +59,7 @@ export default function Header() {
           aria-label="PL Investment 홈"
           className="flex items-center gap-3 group"
         >
-          <span className="relative grid place-items-center h-11 w-11 md:h-12 md:w-12 rounded-xl bg-gradient-to-br from-ink-900 to-ink-700 border border-gold-500/30 shadow-md shadow-ink-900/10 overflow-hidden">
+          <span className="relative grid place-items-center h-11 w-11 md:h-12 md:w-12 rounded-xl bg-gradient-to-br from-ink-800 to-ink-900 border border-gold-500/30 shadow-lg shadow-black/40 overflow-hidden">
             <span className="absolute inset-0 bg-grid opacity-50" />
             <Image
               src="/logo/logo-icon.png"
@@ -71,10 +71,10 @@ export default function Header() {
             />
           </span>
           <span className="flex flex-col leading-none">
-            <span className="font-serif text-[15px] md:text-[17px] font-bold tracking-[0.18em] text-ink-900">
+            <span className="font-display text-[15px] md:text-[17px] font-semibold tracking-[0.18em] text-white">
               PL INVESTMENT
             </span>
-            <span className="mt-1 text-[10px] md:text-[11px] font-medium tracking-[0.3em] text-gold-700">
+            <span className="mt-1 text-[10px] md:text-[11px] font-medium tracking-[0.3em] text-gold-400">
               피엘 인베스트먼트
             </span>
           </span>
@@ -89,13 +89,13 @@ export default function Header() {
                 href={n.href}
                 onClick={close}
                 className={`text-sm font-medium transition relative ${
-                  isActive ? "text-gold-700" : "text-slate-700 hover:text-gold-700"
+                  isActive ? "text-gold-300" : "text-slate-300 hover:text-gold-300"
                 }`}
               >
                 {n.label}
                 <span
                   className={`absolute -bottom-1.5 left-0 right-0 mx-auto h-[2px] rounded-full transition-all ${
-                    isActive ? "w-6 bg-gradient-to-r from-gold-500 to-gold-300" : "w-0 bg-gold-500"
+                    isActive ? "w-6 bg-gradient-to-r from-gold-400 to-gold-300" : "w-0 bg-gold-400"
                   }`}
                 />
               </a>
@@ -106,9 +106,9 @@ export default function Header() {
         <div className="hidden md:flex items-center gap-4">
           <a
             href="tel:0269533081"
-            className="flex items-center gap-1.5 text-sm font-bold text-ink-800 hover:text-gold-700 transition"
+            className="flex items-center gap-1.5 text-sm font-semibold text-slate-200 hover:text-gold-300 transition"
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="text-gold-600">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="text-gold-400">
               <path
                 d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.37 1.9.72 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0122 16.92z"
                 stroke="currentColor"
@@ -122,7 +122,7 @@ export default function Header() {
           <a
             href="#contact"
             onClick={close}
-            className="relative inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-gold-600 via-gold-500 to-gold-400 px-5 py-2 text-sm font-semibold text-ink-900 shadow-gold-soft hover:shadow-gold-glow transition"
+            className="relative inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-gold-500 to-gold-300 px-5 py-2 text-sm font-semibold text-ink-950 shadow-gold-soft hover:shadow-gold-glow transition"
           >
             무료 상담
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
@@ -134,7 +134,7 @@ export default function Header() {
         <button
           aria-label="menu"
           onClick={() => setOpen((v) => !v)}
-          className="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg border border-gold-300/50 text-ink-800 hover:border-gold-500/70 transition"
+          className="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg border border-gold-400/30 text-slate-200 hover:border-gold-400/70 transition"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
             {open ? (
@@ -147,7 +147,7 @@ export default function Header() {
       </div>
 
       {open && (
-        <div className="md:hidden border-t border-gold-200/60 bg-white/95 backdrop-blur">
+        <div className="md:hidden border-t border-gold-500/15 bg-ink-950/95 backdrop-blur">
           <div className="container-x py-4 flex flex-col gap-1">
             {NAV.map((n) => (
               <a
@@ -156,21 +156,21 @@ export default function Header() {
                 onClick={close}
                 className={`px-3 py-3 rounded-lg text-sm font-medium transition ${
                   active === n.href.slice(1)
-                    ? "bg-gold-50 text-gold-700"
-                    : "text-slate-700 hover:bg-gold-50/50"
+                    ? "bg-gold-500/10 text-gold-300"
+                    : "text-slate-300 hover:bg-white/5"
                 }`}
               >
                 {n.label}
               </a>
             ))}
-            <div className="flex items-center justify-between mt-3 pt-3 border-t border-gold-100">
-              <a href="tel:0269533081" className="text-sm font-bold text-ink-800">
+            <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
+              <a href="tel:0269533081" className="text-sm font-semibold text-slate-200">
                 02-6953-3081
               </a>
               <a
                 href="#contact"
                 onClick={close}
-                className="rounded-full bg-gradient-to-r from-gold-600 to-gold-400 px-4 py-2 text-sm font-semibold text-ink-900 shadow-gold-soft"
+                className="rounded-full bg-gradient-to-r from-gold-500 to-gold-300 px-4 py-2 text-sm font-semibold text-ink-950 shadow-gold-soft"
               >
                 무료 상담
               </a>

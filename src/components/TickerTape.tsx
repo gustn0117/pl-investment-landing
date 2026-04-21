@@ -29,7 +29,7 @@ export default function TickerTape() {
             key={i}
             className="flex items-center gap-3 text-[13px] md:text-sm whitespace-nowrap"
           >
-            <span className="font-serif tracking-[0.2em] text-gold-300 font-bold">
+            <span className="font-display tracking-[0.2em] text-gold-300 font-semibold">
               {t.s}
             </span>
             <span className="text-slate-100 font-medium tabular-nums">{t.p}</span>

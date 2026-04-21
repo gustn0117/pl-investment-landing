@@ -137,33 +137,29 @@ export default function Home() {
       {/* HERO */}
       <section
         id="home"
-        className="relative overflow-hidden bg-gradient-to-br from-ink-900 via-ink-800 to-ink-900 text-white"
+        className="relative overflow-hidden bg-ink-950 text-white"
       >
-        {/* Stock chart backdrop */}
-        <ChartBg className="absolute inset-0 h-full w-full opacity-60" />
-        <div className="absolute inset-0 bg-grid opacity-30" />
+        <ChartBg className="absolute inset-0 h-full w-full opacity-70" />
+        <div className="absolute inset-0 bg-grid opacity-40" />
         <div className="blob bg-gold-500 -top-40 -left-20 w-[32rem] h-[32rem] animate-float" />
         <div className="blob bg-gold-800 top-1/3 -right-32 w-[36rem] h-[36rem]" />
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-ink-900 to-transparent pointer-events-none" />
+        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-ink-950 to-transparent pointer-events-none" />
 
-        {/* Vertical scan line */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden hidden md:block">
           <div
             className="absolute inset-x-0 h-[2px] animate-scan"
             style={{
               background:
-                "linear-gradient(90deg, transparent, rgba(223,189,106,0.3), transparent)",
+                "linear-gradient(90deg, transparent, rgba(223,189,106,0.35), transparent)",
             }}
           />
         </div>
 
-        {/* 3D orbital accent */}
-        <div className="pointer-events-none absolute top-1/4 right-4 md:right-16 w-48 md:w-80 opacity-40 md:opacity-60 hidden sm:block">
+        <div className="pointer-events-none absolute top-1/4 right-4 md:right-16 w-48 md:w-80 opacity-50 md:opacity-70 hidden sm:block">
           <OrbitalAccent />
         </div>
 
-        {/* Giant watermark logo */}
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-full md:w-[55%] flex items-center justify-center opacity-[0.04] md:opacity-[0.07]">
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-full md:w-[55%] flex items-center justify-center opacity-[0.035] md:opacity-[0.06]">
           <Image
             src="/logo/logo-icon.png"
             alt=""
@@ -177,25 +173,25 @@ export default function Home() {
 
         <div className="relative container-x min-h-screen flex items-center py-32 md:py-40">
           <div className="max-w-4xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-gold-400/30 bg-gold-500/5 px-4 py-1.5 text-xs font-medium tracking-[0.2em] text-gold-300 backdrop-blur animate-fade-in">
+            <div className="inline-flex items-center gap-2 rounded-full border border-gold-400/25 bg-gold-500/5 px-4 py-1.5 text-xs font-medium tracking-[0.25em] text-gold-300 backdrop-blur animate-fade-in">
               <span className="h-1.5 w-1.5 rounded-full bg-gold-400 animate-shimmer" />
               PREMIUM STOCK INVESTMENT
             </div>
 
             <h1 className="mt-7 animate-fade-up">
-              <span className="block font-serif text-5xl md:text-7xl font-bold leading-[1.1] tracking-tight">
+              <span className="block font-display text-5xl md:text-7xl font-light leading-[1.05] tracking-tight text-white">
                 시장 구조와 산업의 흐름을
               </span>
-              <span className="mt-3 block font-serif text-5xl md:text-7xl font-bold leading-[1.1] tracking-tight text-gold-gradient">
+              <span className="mt-3 block font-display text-5xl md:text-7xl font-medium leading-[1.05] tracking-tight text-gold-gradient">
                 깊이 있게 분석합니다
               </span>
             </h1>
 
             <div className="mt-8 divider-gold">
-              <span className="font-serif text-sm tracking-[0.4em] text-gold-300">PL INVESTMENT</span>
+              <span className="font-display text-sm tracking-[0.4em] text-gold-300">PL INVESTMENT</span>
             </div>
 
-            <p className="mt-8 text-base md:text-xl leading-relaxed text-slate-300 max-w-2xl animate-fade-up" style={{ animationDelay: "0.1s" }}>
+            <p className="mt-8 text-base md:text-xl leading-relaxed text-slate-300/90 max-w-2xl font-light animate-fade-up" style={{ animationDelay: "0.1s" }}>
               가치 있는 투자 아이디어를 제시하는 주식 투자 전문 회사.
               <br className="hidden md:block" />
               PL Investment가 투자자의 올바른 방향을 함께 설계합니다.
@@ -218,7 +214,7 @@ export default function Home() {
                 { k: "12+", v: "전문 애널리스트" },
               ].map((s) => (
                 <div key={s.v} className="relative">
-                  <div className="font-serif text-3xl md:text-4xl font-bold text-gold-gradient">{s.k}</div>
+                  <div className="font-display text-3xl md:text-4xl font-medium text-gold-gradient">{s.k}</div>
                   <div className="mt-2 text-xs md:text-sm text-slate-400 tracking-wider">{s.v}</div>
                 </div>
               ))}
@@ -238,8 +234,8 @@ export default function Home() {
       <TickerTape />
 
       {/* LOGO BADGE STRIP */}
-      <section className="relative bg-ink-900 border-y border-gold-500/15">
-        <div className="absolute inset-0 bg-grid opacity-30" />
+      <section className="relative bg-ink-950 border-y border-gold-500/10">
+        <div className="absolute inset-0 bg-grid opacity-25" />
         <div className="relative container-x py-10 md:py-12 flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12">
           <Image
             src="/logo/logo-gold-white.png"
@@ -248,9 +244,9 @@ export default function Home() {
             height={320}
             className="h-20 md:h-24 w-auto object-contain"
           />
-          <span className="hidden md:block h-16 w-px bg-gradient-to-b from-transparent via-gold-500/50 to-transparent" />
+          <span className="hidden md:block h-16 w-px bg-gradient-to-b from-transparent via-gold-500/40 to-transparent" />
           <div className="text-center md:text-left">
-            <div className="font-serif text-sm md:text-base tracking-[0.3em] text-gold-300">
+            <div className="font-display text-sm md:text-base tracking-[0.3em] text-gold-300">
               VALUE · TRUST · INSIGHT
             </div>
             <div className="mt-2 text-xs md:text-sm text-slate-400">
@@ -261,8 +257,9 @@ export default function Home() {
       </section>
 
       {/* SERVICE HIGHLIGHTS */}
-      <section className="relative py-20 md:py-28 bg-gradient-to-b from-white to-gold-50/40">
-        <div className="absolute inset-0 bg-grid-light opacity-60 pointer-events-none" />
+      <section className="relative py-20 md:py-28 bg-ink-950">
+        <div className="absolute inset-0 bg-grid-dense opacity-40 pointer-events-none" />
+        <div className="blob bg-gold-700 top-20 -left-40 w-[28rem] h-[28rem]" />
         <div className="relative container-x">
           <SectionHeader
             eyebrow="OUR SERVICES"
@@ -273,15 +270,15 @@ export default function Home() {
             {HIGHLIGHTS.map((h) => (
               <div key={h.title} className="card-soft group">
                 <div className="flex items-center justify-between">
-                  <span className="relative grid place-items-center h-12 w-12 rounded-xl bg-gold-50 text-gold-700 border border-gold-200/70 group-hover:bg-gradient-to-br group-hover:from-gold-500 group-hover:to-gold-700 group-hover:text-white group-hover:border-transparent transition">
+                  <span className="relative grid place-items-center h-12 w-12 rounded-xl bg-gold-500/10 text-gold-300 border border-gold-500/20 group-hover:bg-gradient-to-br group-hover:from-gold-400 group-hover:to-gold-600 group-hover:text-ink-950 group-hover:border-transparent transition">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none">{h.icon}</svg>
                   </span>
-                  <span className="font-serif text-[11px] font-bold tracking-[0.3em] text-gold-600/80">{h.tag}</span>
+                  <span className="font-display text-[11px] font-medium tracking-[0.3em] text-gold-400/80">{h.tag}</span>
                 </div>
-                <h3 className="mt-6 font-serif text-2xl font-bold text-ink-900">{h.title}</h3>
-                <div className="mt-1 text-sm font-medium text-gold-700">{h.desc}</div>
-                <div className="mt-4 h-px bg-gradient-to-r from-gold-200 via-gold-400/60 to-transparent" />
-                <p className="mt-4 text-sm leading-relaxed text-slate-600">{h.body}</p>
+                <h3 className="mt-6 font-display text-2xl font-medium text-white">{h.title}</h3>
+                <div className="mt-1 text-sm font-medium text-gold-300">{h.desc}</div>
+                <div className="mt-4 h-px bg-gradient-to-r from-gold-400/50 via-gold-500/30 to-transparent" />
+                <p className="mt-4 text-sm leading-relaxed text-slate-400">{h.body}</p>
               </div>
             ))}
           </div>
@@ -289,22 +286,23 @@ export default function Home() {
       </section>
 
       {/* ABOUT — CEO MESSAGE */}
-      <section id="about" className="relative py-20 md:py-32 bg-white overflow-hidden">
-        <div className="absolute top-20 right-0 w-[40%] opacity-[0.04] pointer-events-none">
+      <section id="about" className="relative py-20 md:py-32 bg-ink-900 overflow-hidden">
+        <div className="absolute top-20 right-0 w-[40%] opacity-[0.03] pointer-events-none">
           <Image src="/logo/logo-icon.png" alt="" aria-hidden width={600} height={600} className="w-full object-contain" />
         </div>
+        <div className="blob bg-gold-600 bottom-20 -right-40 w-[28rem] h-[28rem]" />
         <div className="relative container-x">
           <div className="grid gap-12 lg:grid-cols-12">
             <div className="lg:col-span-4">
               <div className="eyebrow">CEO MESSAGE</div>
-              <h2 className="h-section mt-4 font-serif">대표 인사말</h2>
-              <div className="mt-8 relative rounded-2xl bg-gradient-to-br from-ink-900 to-ink-800 text-white p-7 overflow-hidden border border-gold-500/20">
-                <div className="absolute inset-0 bg-grid opacity-30" />
+              <h2 className="h-section mt-4 text-white">대표 인사말</h2>
+              <div className="mt-8 relative rounded-2xl bg-gradient-to-br from-ink-800/80 to-ink-900/60 backdrop-blur-sm p-7 overflow-hidden border border-gold-500/15">
+                <div className="absolute inset-0 bg-grid opacity-25" />
                 <div className="relative">
-                  <div className="font-serif text-sm tracking-[0.3em] text-gold-400">PL INVESTMENT</div>
-                  <div className="mt-2 text-2xl font-bold">대표</div>
+                  <div className="font-display text-sm tracking-[0.3em] text-gold-400">PL INVESTMENT</div>
+                  <div className="mt-2 text-2xl font-medium text-white">대표</div>
                   <div className="mt-5 hairline-gold" />
-                  <div className="mt-5 text-xs text-slate-300 leading-relaxed">
+                  <div className="mt-5 text-xs text-slate-400 leading-relaxed">
                     체계적인 분석과 원칙 있는 투자로 투자자와 함께 성장하는 파트너가
                     되겠습니다.
                   </div>
@@ -312,24 +310,24 @@ export default function Home() {
               </div>
             </div>
             <div className="lg:col-span-8">
-              <p className="font-serif text-2xl md:text-3xl font-bold leading-snug text-ink-900">
+              <p className="font-display text-2xl md:text-3xl font-light leading-snug text-white">
                 금융 시장은 끊임없이 변화하며,<br className="hidden md:block" />
-                <span className="text-gold-gradient">그 속에서 기회는 언제나 새로운 형태로 나타납니다.</span>
+                <span className="text-gold-gradient font-medium">그 속에서 기회는 언제나 새로운 형태로 나타납니다.</span>
               </p>
-              <div className="mt-8 space-y-5 text-base md:text-lg leading-relaxed text-slate-700">
+              <div className="mt-8 space-y-5 text-base md:text-lg leading-relaxed text-slate-300 font-light">
                 <p>PL Investment는 이러한 시장의 흐름을 분석하고 투자자들이 올바른 방향으로 나아갈 수 있도록 돕는 주식 투자 전문 회사입니다.</p>
                 <p>우리는 단순한 정보 전달이 아닌 시장 구조와 산업의 흐름을 깊이 있게 분석하여 가치 있는 투자 아이디어를 제시합니다.</p>
                 <p>수많은 변수와 노이즈 속에서도 냉정한 데이터 분석과 경험을 기반으로 투자의 본질에 집중합니다.</p>
               </div>
-              <div className="mt-10 relative rounded-2xl border-l-4 border-gold-500 bg-gradient-to-r from-gold-50/80 to-transparent p-7 md:p-8">
-                <svg width="32" height="32" viewBox="0 0 32 32" className="absolute -top-4 left-6 text-gold-500" fill="currentColor">
+              <div className="mt-10 relative rounded-2xl border-l-2 border-gold-400 bg-gradient-to-r from-gold-500/10 to-transparent p-7 md:p-8">
+                <svg width="32" height="32" viewBox="0 0 32 32" className="absolute -top-4 left-6 text-gold-400" fill="currentColor">
                   <path d="M10 8c-3.3 0-6 2.7-6 6v8h8v-8H6c0-2.2 1.8-4 4-4V8zm12 0c-3.3 0-6 2.7-6 6v8h8v-8h-6c0-2.2 1.8-4 4-4V8z" />
                 </svg>
-                <p className="text-base md:text-lg font-semibold text-ink-900 leading-relaxed">
+                <p className="text-base md:text-lg font-medium text-white leading-relaxed">
                   PL Investment의 목표는 단 하나입니다.<br />
-                  <span className="text-gold-700">투자자들이 더 나은 투자 판단을 할 수 있도록 돕는 것.</span>
+                  <span className="text-gold-300">투자자들이 더 나은 투자 판단을 할 수 있도록 돕는 것.</span>
                 </p>
-                <p className="mt-3 text-sm md:text-base text-slate-600 leading-relaxed">
+                <p className="mt-3 text-sm md:text-base text-slate-400 leading-relaxed font-light">
                   시장의 변화 속에서도 흔들리지 않는 원칙과 철학으로 투자자와 함께
                   성장하는 파트너가 되겠습니다.
                 </p>
@@ -340,22 +338,23 @@ export default function Home() {
       </section>
 
       {/* OUR VALUES */}
-      <section className="relative py-20 md:py-28 bg-gradient-to-b from-gold-50/30 to-white">
-        <div className="container-x">
+      <section className="relative py-20 md:py-28 bg-ink-950">
+        <div className="absolute inset-0 bg-grid-dense opacity-30" />
+        <div className="relative container-x">
           <SectionHeader
             eyebrow="OUR VALUES"
             title="흔들리지 않는 원칙과 철학"
             description="수많은 변수와 노이즈 속에서도 냉정한 데이터 분석과 경험을 기반으로 투자의 본질에 집중합니다."
           />
-          <div className="mt-14 grid gap-px bg-gold-200/60 md:grid-cols-2 rounded-3xl overflow-hidden border border-gold-200/60 shadow-gold-soft">
+          <div className="mt-14 grid gap-px bg-white/[0.04] md:grid-cols-2 rounded-3xl overflow-hidden border border-white/10 shadow-dark-panel">
             {VALUES.map((v) => (
-              <div key={v.n} className="bg-white p-8 md:p-10 hover:bg-gold-50/40 transition group">
+              <div key={v.n} className="bg-ink-900/60 backdrop-blur-sm p-8 md:p-10 hover:bg-ink-800/60 transition group">
                 <div className="flex items-baseline gap-4">
-                  <span className="font-serif text-4xl font-black text-gold-300 group-hover:text-gold-600 transition">{v.n}</span>
-                  <h3 className="text-lg md:text-xl font-bold text-ink-900">{v.t}</h3>
+                  <span className="font-display text-4xl font-light text-gold-400/40 group-hover:text-gold-400 transition">{v.n}</span>
+                  <h3 className="text-lg md:text-xl font-medium text-white">{v.t}</h3>
                 </div>
-                <div className="mt-3 h-px w-12 bg-gradient-to-r from-gold-500 to-transparent" />
-                <p className="mt-4 text-sm md:text-base leading-relaxed text-slate-600">{v.d}</p>
+                <div className="mt-3 h-px w-12 bg-gradient-to-r from-gold-400 to-transparent" />
+                <p className="mt-4 text-sm md:text-base leading-relaxed text-slate-400 font-light">{v.d}</p>
               </div>
             ))}
           </div>
@@ -363,18 +362,19 @@ export default function Home() {
       </section>
 
       {/* COMPANY OVERVIEW */}
-      <section className="py-20 md:py-28 bg-white">
-        <div className="container-x">
+      <section className="py-20 md:py-28 bg-ink-900 relative">
+        <div className="absolute inset-0 bg-grid opacity-20" />
+        <div className="relative container-x">
           <SectionHeader
             eyebrow="COMPANY OVERVIEW"
             title="회사 개요"
             description="PL Investment의 기본 정보입니다."
           />
-          <div className="mt-12 max-w-3xl mx-auto rounded-3xl bg-white border border-gold-200/70 overflow-hidden divide-y divide-gold-100 shadow-gold-soft">
+          <div className="mt-12 max-w-3xl mx-auto rounded-3xl bg-ink-800/50 backdrop-blur-sm border border-white/10 overflow-hidden divide-y divide-white/5 shadow-dark-panel">
             {COMPANY.map((c) => (
               <div key={c.k} className="grid grid-cols-3 md:grid-cols-4">
-                <div className="col-span-1 bg-gradient-to-br from-gold-50 to-gold-100/50 px-6 py-5 text-sm font-bold text-ink-900 border-r border-gold-200/60">{c.k}</div>
-                <div className="col-span-2 md:col-span-3 px-6 py-5 text-sm md:text-base text-slate-700">{c.v}</div>
+                <div className="col-span-1 bg-gold-500/5 px-6 py-5 text-sm font-medium text-gold-300 border-r border-white/5">{c.k}</div>
+                <div className="col-span-2 md:col-span-3 px-6 py-5 text-sm md:text-base text-slate-200 font-light">{c.v}</div>
               </div>
             ))}
           </div>
@@ -382,8 +382,9 @@ export default function Home() {
       </section>
 
       {/* PHILOSOPHY */}
-      <section className="relative py-20 md:py-28 bg-gradient-to-b from-gold-50/20 via-white to-gold-50/30 overflow-hidden">
-        <CandlestickField className="absolute inset-0 w-full h-full opacity-[0.45] mix-blend-multiply" density={28} />
+      <section className="relative py-20 md:py-28 bg-ink-950 overflow-hidden">
+        <CandlestickField className="absolute inset-0 w-full h-full opacity-40" density={28} />
+        <div className="absolute inset-0 bg-grid-dense opacity-25" />
         <div className="relative container-x">
           <SectionHeader
             eyebrow="OUR PHILOSOPHY"
@@ -394,11 +395,11 @@ export default function Home() {
             {PHILOSOPHY.map((p) => (
               <div key={p.n} className="card-soft">
                 <div className="flex items-start gap-5">
-                  <span className="font-serif text-4xl font-black text-gold-gradient leading-none">{p.n}</span>
+                  <span className="font-display text-4xl font-light text-gold-gradient leading-none">{p.n}</span>
                   <div>
-                    <h3 className="text-lg md:text-xl font-bold text-ink-900">{p.t}</h3>
+                    <h3 className="text-lg md:text-xl font-medium text-white">{p.t}</h3>
                     <div className="mt-3 h-px w-10 bg-gradient-to-r from-gold-400 to-transparent" />
-                    <p className="mt-4 text-sm md:text-base leading-relaxed text-slate-600">{p.d}</p>
+                    <p className="mt-4 text-sm md:text-base leading-relaxed text-slate-400 font-light">{p.d}</p>
                   </div>
                 </div>
               </div>
@@ -408,10 +409,11 @@ export default function Home() {
       </section>
 
       {/* WHY PL */}
-      <section className="relative py-20 md:py-28 bg-white overflow-hidden">
-        <div className="absolute -left-40 top-1/2 -translate-y-1/2 w-[36rem] opacity-[0.035] pointer-events-none">
+      <section className="relative py-20 md:py-28 bg-ink-900 overflow-hidden">
+        <div className="absolute -left-40 top-1/2 -translate-y-1/2 w-[36rem] opacity-[0.03] pointer-events-none">
           <Image src="/logo/logo-icon.png" alt="" aria-hidden width={600} height={600} className="w-full object-contain" />
         </div>
+        <div className="absolute inset-0 bg-grid opacity-20" />
         <div className="relative container-x">
           <SectionHeader
             eyebrow="WHY PL INVESTMENT"
@@ -420,13 +422,13 @@ export default function Home() {
           />
           <div className="mt-14 grid gap-6 md:grid-cols-3">
             {REASONS.map((r) => (
-              <div key={r.t} className="group relative rounded-2xl bg-white border border-gold-200/60 p-8 text-center shadow-sm hover:shadow-gold-glow hover:border-gold-400/60 transition">
+              <div key={r.t} className="group relative rounded-2xl bg-ink-800/50 backdrop-blur-sm border border-white/10 p-8 text-center shadow-dark-panel hover:border-gold-400/35 hover:shadow-[0_30px_80px_-25px_rgba(223,189,106,0.25)] transition">
                 <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold-400/70 to-transparent opacity-0 group-hover:opacity-100 transition" />
-                <span className="inline-grid place-items-center h-16 w-16 rounded-2xl bg-gradient-to-br from-gold-50 to-gold-100 text-gold-700 border border-gold-200/70 group-hover:from-gold-500 group-hover:to-gold-700 group-hover:text-white group-hover:border-transparent transition">
+                <span className="inline-grid place-items-center h-16 w-16 rounded-2xl bg-gold-500/10 text-gold-300 border border-gold-500/25 group-hover:from-gold-400 group-hover:to-gold-600 group-hover:bg-gradient-to-br group-hover:text-ink-950 group-hover:border-transparent transition">
                   <svg width="28" height="28" viewBox="0 0 24 24" fill="none">{r.icon}</svg>
                 </span>
-                <h3 className="mt-6 font-serif text-xl font-bold text-ink-900">{r.t}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-slate-600">{r.d}</p>
+                <h3 className="mt-6 font-display text-xl font-medium text-white">{r.t}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-slate-400 font-light">{r.d}</p>
               </div>
             ))}
           </div>
@@ -434,8 +436,10 @@ export default function Home() {
       </section>
 
       {/* SERVICES */}
-      <section id="services" className="py-20 md:py-28 bg-gradient-to-b from-white to-gold-50/40">
-        <div className="container-x">
+      <section id="services" className="py-20 md:py-28 bg-ink-950 relative overflow-hidden">
+        <div className="absolute inset-0 bg-grid-dense opacity-30" />
+        <div className="blob bg-gold-700 top-40 right-0 w-[28rem] h-[28rem]" />
+        <div className="relative container-x">
           <SectionHeader
             eyebrow="SERVICE SYSTEM"
             title="투자 서비스"
@@ -444,25 +448,25 @@ export default function Home() {
           <div className="mt-14 space-y-6">
             {SERVICES.map((s, i) => (
               <div key={s.title} className="grid gap-6 lg:grid-cols-12 items-stretch">
-                <div className="lg:col-span-5 relative rounded-3xl bg-gradient-to-br from-ink-900 via-ink-800 to-ink-900 text-white p-8 md:p-10 overflow-hidden border border-gold-500/20">
-                  <ChartBg className="absolute inset-0 h-full w-full opacity-40" variant="card" />
+                <div className="lg:col-span-5 relative rounded-3xl bg-gradient-to-br from-ink-800 via-ink-900 to-ink-950 text-white p-8 md:p-10 overflow-hidden border border-gold-500/20">
+                  <ChartBg className="absolute inset-0 h-full w-full opacity-50" variant="card" />
                   <div className="absolute inset-0 bg-grid opacity-30" />
                   <div className="absolute -right-8 -bottom-8 w-48 opacity-[0.08]">
                     <Image src="/logo/logo-icon.png" alt="" aria-hidden width={300} height={300} className="w-full object-contain" />
                   </div>
                   <div className="relative">
-                    <div className="font-serif text-xs font-bold tracking-[0.3em] text-gold-400">[{s.tag}]</div>
-                    <div className="mt-6 font-serif text-7xl md:text-8xl font-black leading-none text-gold-gradient opacity-80">0{i + 1}</div>
-                    <h3 className="mt-4 font-serif text-2xl md:text-3xl font-bold">{s.title}</h3>
+                    <div className="font-display text-xs font-medium tracking-[0.3em] text-gold-400">[{s.tag}]</div>
+                    <div className="mt-6 font-display text-7xl md:text-8xl font-light leading-none text-gold-gradient opacity-90">0{i + 1}</div>
+                    <h3 className="mt-4 font-display text-2xl md:text-3xl font-medium text-white">{s.title}</h3>
                     <div className="mt-5 h-px w-16 bg-gradient-to-r from-gold-400 to-transparent" />
                   </div>
                 </div>
-                <div className="lg:col-span-7 rounded-3xl bg-white border border-gold-200/70 p-8 md:p-10 shadow-gold-soft">
-                  <p className="text-base md:text-lg leading-relaxed text-slate-700">{s.desc}</p>
+                <div className="lg:col-span-7 rounded-3xl bg-ink-800/50 backdrop-blur-sm border border-white/10 p-8 md:p-10 shadow-dark-panel">
+                  <p className="text-base md:text-lg leading-relaxed text-slate-300 font-light">{s.desc}</p>
                   <div className="mt-8 flex flex-wrap gap-2.5">
                     {s.items.map((it) => (
-                      <span key={it} className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-gold-50 to-gold-100/50 border border-gold-300/60 px-4 py-2 text-sm font-medium text-gold-800">
-                        <span className="h-1.5 w-1.5 rounded-full bg-gold-500" />
+                      <span key={it} className="inline-flex items-center gap-2 rounded-full bg-gold-500/8 border border-gold-500/30 px-4 py-2 text-sm font-medium text-gold-200">
+                        <span className="h-1.5 w-1.5 rounded-full bg-gold-400" />
                         {it}
                       </span>
                     ))}
@@ -475,22 +479,23 @@ export default function Home() {
       </section>
 
       {/* ADVANTAGES */}
-      <section className="py-20 md:py-28 bg-white">
-        <div className="container-x">
+      <section className="py-20 md:py-28 bg-ink-900 relative">
+        <div className="absolute inset-0 bg-grid opacity-20" />
+        <div className="relative container-x">
           <SectionHeader
             eyebrow="ADVANTAGES"
             title="PL Investment만의 차별화"
             description="다른 곳과는 다른 PL Investment의 차별화된 가치를 확인해 보세요."
           />
-          <div className="mt-14 grid gap-px bg-gold-200/60 md:grid-cols-2 rounded-3xl overflow-hidden border border-gold-200/60 shadow-gold-soft">
+          <div className="mt-14 grid gap-px bg-white/[0.04] md:grid-cols-2 rounded-3xl overflow-hidden border border-white/10 shadow-dark-panel">
             {ADVANTAGES.map((a, i) => (
-              <div key={a.t} className="bg-white p-8 md:p-10 hover:bg-gold-50/40 transition group">
+              <div key={a.t} className="bg-ink-800/50 backdrop-blur-sm p-8 md:p-10 hover:bg-ink-700/50 transition group">
                 <div className="flex items-baseline gap-4">
-                  <span className="font-serif text-3xl font-black text-gold-300 group-hover:text-gold-600 transition">{String(i + 1).padStart(2, "0")}</span>
-                  <h3 className="text-lg md:text-xl font-bold text-ink-900">{a.t}</h3>
+                  <span className="font-display text-3xl font-light text-gold-400/40 group-hover:text-gold-400 transition">{String(i + 1).padStart(2, "0")}</span>
+                  <h3 className="text-lg md:text-xl font-medium text-white">{a.t}</h3>
                 </div>
-                <div className="mt-3 h-px w-12 bg-gradient-to-r from-gold-500 to-transparent" />
-                <p className="mt-4 text-sm md:text-base leading-relaxed text-slate-600">{a.d}</p>
+                <div className="mt-3 h-px w-12 bg-gradient-to-r from-gold-400 to-transparent" />
+                <p className="mt-4 text-sm md:text-base leading-relaxed text-slate-400 font-light">{a.d}</p>
               </div>
             ))}
           </div>
@@ -498,8 +503,9 @@ export default function Home() {
       </section>
 
       {/* PROCESS */}
-      <section className="py-20 md:py-28 bg-gradient-to-b from-gold-50/40 to-white">
-        <div className="container-x">
+      <section className="py-20 md:py-28 bg-ink-950 relative">
+        <div className="absolute inset-0 bg-grid-dense opacity-30" />
+        <div className="relative container-x">
           <SectionHeader
             eyebrow="PROCESS"
             title="투자 서비스 진행 절차"
@@ -508,14 +514,14 @@ export default function Home() {
           <div className="mt-14 grid gap-6 md:grid-cols-4">
             {PROCESS.map((p, i) => (
               <div key={p.n} className="relative">
-                <div className="relative rounded-2xl bg-white border border-gold-200/60 p-7 h-full shadow-sm hover:shadow-gold-glow hover:border-gold-400/60 transition">
-                  <div className="font-serif text-xs font-bold tracking-[0.25em] text-gold-700">{p.n}</div>
-                  <h3 className="mt-3 text-lg font-bold text-ink-900">{p.t}</h3>
+                <div className="relative rounded-2xl bg-ink-800/50 backdrop-blur-sm border border-white/10 p-7 h-full shadow-dark-panel hover:border-gold-400/40 hover:shadow-[0_30px_80px_-25px_rgba(223,189,106,0.25)] transition">
+                  <div className="font-display text-xs font-medium tracking-[0.25em] text-gold-300">{p.n}</div>
+                  <h3 className="mt-3 text-lg font-medium text-white">{p.t}</h3>
                   <div className="mt-3 h-px w-10 bg-gradient-to-r from-gold-400 to-transparent" />
-                  <p className="mt-3 text-sm leading-relaxed text-slate-600">{p.d}</p>
+                  <p className="mt-3 text-sm leading-relaxed text-slate-400 font-light">{p.d}</p>
                 </div>
                 {i < PROCESS.length - 1 && (
-                  <div className="hidden md:flex absolute top-1/2 -right-3 -translate-y-1/2 z-10 h-7 w-7 rounded-full bg-gradient-to-br from-gold-400 to-gold-600 text-white items-center justify-center shadow-md">
+                  <div className="hidden md:flex absolute top-1/2 -right-3 -translate-y-1/2 z-10 h-7 w-7 rounded-full bg-gradient-to-br from-gold-400 to-gold-600 text-ink-950 items-center justify-center shadow-gold-soft">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
                       <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
@@ -528,41 +534,42 @@ export default function Home() {
       </section>
 
       {/* RESULTS */}
-      <section id="results" className="py-20 md:py-28 bg-white">
-        <div className="container-x">
+      <section id="results" className="py-20 md:py-28 bg-ink-900 relative">
+        <div className="absolute inset-0 bg-grid opacity-20" />
+        <div className="relative container-x">
           <SectionHeader
             eyebrow="MONTHLY REPORT"
             title="월별 수익 내역"
             description="매월 투명하게 공개되는 투자 성과를 확인해 보세요."
           />
-          <div className="mt-14 overflow-hidden rounded-3xl border border-gold-200/70 shadow-gold-soft">
+          <div className="mt-14 overflow-hidden rounded-3xl border border-white/10 shadow-dark-panel bg-ink-800/40 backdrop-blur-sm">
             <div className="overflow-x-auto">
               <table className="w-full text-sm md:text-base">
-                <thead className="bg-gradient-to-r from-ink-900 via-ink-800 to-ink-900 text-white relative">
+                <thead className="bg-gradient-to-r from-ink-800 via-ink-700 to-ink-800 text-white relative">
                   <tr>
                     {["기간", "수익률", "매매 횟수", "승률", "평균", "추이"].map((h) => (
-                      <th key={h} className="px-6 py-5 text-left font-bold tracking-wide border-b border-gold-500/20">
-                        <span className="text-gold-300 font-serif tracking-[0.15em] text-xs mr-2">·</span>
+                      <th key={h} className="px-6 py-5 text-left font-medium tracking-wide border-b border-gold-500/20">
+                        <span className="text-gold-300 font-display tracking-[0.15em] text-xs mr-2">·</span>
                         {h}
                       </th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gold-100 bg-white">
+                <tbody className="divide-y divide-white/5">
                   {RESULTS.map((row) => (
-                    <tr key={row.p} className="hover:bg-gold-50/40 transition">
-                      <td className="px-6 py-5 font-bold text-ink-900 font-serif">{row.p}</td>
+                    <tr key={row.p} className="hover:bg-gold-500/5 transition">
+                      <td className="px-6 py-5 font-medium text-white font-display">{row.p}</td>
                       <td className="px-6 py-5">
-                        <span className="inline-flex items-center gap-1 rounded-full bg-rose-50 border border-rose-100 px-3 py-1 text-sm font-bold text-rose-600">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-rose-500/15 border border-rose-400/30 px-3 py-1 text-sm font-semibold text-rose-300">
                           <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
                             <path d="M5 15l7-7 7 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                           {row.r}
                         </span>
                       </td>
-                      <td className="px-6 py-5 text-slate-700">{row.c}회</td>
-                      <td className="px-6 py-5 text-slate-700 font-medium">{row.w}</td>
-                      <td className="px-6 py-5 text-gold-700 font-semibold">{row.a}</td>
+                      <td className="px-6 py-5 text-slate-300">{row.c}회</td>
+                      <td className="px-6 py-5 text-slate-300 font-medium">{row.w}</td>
+                      <td className="px-6 py-5 text-gold-300 font-semibold">{row.a}</td>
                       <td className="px-6 py-5">
                         <Sparkline points={row.pts} up width={110} height={32} />
                       </td>
@@ -579,8 +586,9 @@ export default function Home() {
       </section>
 
       {/* REVIEWS */}
-      <section className="py-20 md:py-28 bg-gradient-to-b from-white to-gold-50/40">
-        <div className="container-x">
+      <section className="py-20 md:py-28 bg-ink-950 relative">
+        <div className="absolute inset-0 bg-grid-dense opacity-30" />
+        <div className="relative container-x">
           <SectionHeader
             eyebrow="REVIEWS"
             title="고객 후기"
@@ -588,25 +596,25 @@ export default function Home() {
           />
           <div className="mt-14 grid gap-6 md:grid-cols-2">
             {REVIEWS.map((r) => (
-              <div key={r.n} className="relative rounded-2xl bg-white border border-gold-200/60 p-8 hover:shadow-gold-glow hover:border-gold-400/50 transition">
-                <svg width="40" height="40" viewBox="0 0 32 32" className="absolute -top-3 left-6 text-gold-500" fill="currentColor">
+              <div key={r.n} className="relative rounded-2xl bg-ink-800/50 backdrop-blur-sm border border-white/10 p-8 shadow-dark-panel hover:border-gold-400/40 hover:shadow-[0_30px_80px_-25px_rgba(223,189,106,0.25)] transition">
+                <svg width="40" height="40" viewBox="0 0 32 32" className="absolute -top-3 left-6 text-gold-400" fill="currentColor">
                   <path d="M10 8c-3.3 0-6 2.7-6 6v8h8v-8H6c0-2.2 1.8-4 4-4V8zm12 0c-3.3 0-6 2.7-6 6v8h8v-8h-6c0-2.2 1.8-4 4-4V8z" />
                 </svg>
-                <div className="flex items-center gap-1 text-gold-500 mt-2">
+                <div className="flex items-center gap-1 text-gold-400 mt-2">
                   {[0, 1, 2, 3, 4].map((i) => (
                     <svg key={i} width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7l3-7z" />
                     </svg>
                   ))}
                 </div>
-                <p className="mt-5 text-base leading-relaxed text-slate-700">
+                <p className="mt-5 text-base leading-relaxed text-slate-200 font-light">
                   {r.r}
                 </p>
-                <div className="mt-6 flex items-center gap-3 pt-5 border-t border-gold-100">
-                  <span className="grid place-items-center h-10 w-10 rounded-full bg-gradient-to-br from-gold-400 to-gold-600 text-white font-bold text-sm shadow-gold-soft">{r.n[0]}</span>
+                <div className="mt-6 flex items-center gap-3 pt-5 border-t border-white/5">
+                  <span className="grid place-items-center h-10 w-10 rounded-full bg-gradient-to-br from-gold-400 to-gold-600 text-ink-950 font-medium text-sm shadow-gold-soft">{r.n[0]}</span>
                   <div>
-                    <div className="text-sm font-bold text-ink-900">{r.n}</div>
-                    <div className="text-xs text-slate-500">{r.m}</div>
+                    <div className="text-sm font-medium text-white">{r.n}</div>
+                    <div className="text-xs text-slate-400">{r.m}</div>
                   </div>
                 </div>
               </div>
@@ -619,22 +627,23 @@ export default function Home() {
       </section>
 
       {/* CTA SPLIT */}
-      <section className="bg-white">
-        <div className="container-x py-20 md:py-28">
+      <section className="bg-ink-900 relative">
+        <div className="absolute inset-0 bg-grid opacity-20" />
+        <div className="relative container-x py-20 md:py-28">
           <div className="grid gap-12 lg:grid-cols-2 items-center">
             <div>
               <div className="eyebrow">PARTNER</div>
-              <h2 className="h-section mt-4 font-serif">
+              <h2 className="h-section mt-4 text-white">
                 시장의 변화 속에서도<br />
                 <span className="text-gold-gradient">흔들리지 않는 파트너</span>
               </h2>
-              <p className="mt-6 text-base md:text-lg leading-relaxed text-slate-600">
+              <p className="mt-6 text-base md:text-lg leading-relaxed text-slate-300 font-light">
                 금융 시장은 끊임없이 변화하며 그 속에서 기회는 언제나 새로운 형태로
                 나타납니다. PL Investment가 올바른 방향으로 나아갈 수 있도록 돕겠습니다.
               </p>
             </div>
-            <div className="relative rounded-3xl bg-gradient-to-br from-ink-900 via-ink-800 to-ink-900 p-8 md:p-10 text-white overflow-hidden border border-gold-500/25 shadow-2xl">
-              <ChartBg className="absolute inset-0 h-full w-full opacity-45" variant="card" />
+            <div className="relative rounded-3xl bg-gradient-to-br from-ink-800 via-ink-900 to-ink-950 p-8 md:p-10 text-white overflow-hidden border border-gold-500/20 shadow-2xl">
+              <ChartBg className="absolute inset-0 h-full w-full opacity-50" variant="card" />
               <div className="absolute inset-0 bg-grid opacity-30" />
               <div className="absolute -top-10 -right-10 w-56 opacity-[0.08]">
                 <Image src="/logo/logo-icon.png" alt="" aria-hidden width={400} height={400} className="w-full object-contain" />
@@ -643,16 +652,16 @@ export default function Home() {
                 <ul className="space-y-4">
                   {["효율적인 자산 운용 설계", "리스크 관리 및 안정적 수익 추구", "시장 구조와 산업 흐름 분석"].map((t) => (
                     <li key={t} className="flex items-start gap-3">
-                      <span className="mt-1 grid place-items-center h-6 w-6 rounded-full bg-gold-500/20 text-gold-300 shrink-0 border border-gold-500/30">
+                      <span className="mt-1 grid place-items-center h-6 w-6 rounded-full bg-gold-500/15 text-gold-300 shrink-0 border border-gold-500/30">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
                           <path d="M5 12l5 5L20 7" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                       </span>
-                      <span className="text-base font-medium">{t}</span>
+                      <span className="text-base font-medium text-slate-100">{t}</span>
                     </li>
                   ))}
                 </ul>
-                <a href="#contact" className="mt-10 inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-gold-400 via-gold-300 to-gold-400 px-7 py-3.5 text-sm font-bold text-ink-900 shadow-gold-glow hover:shadow-[0_0_40px_rgba(223,189,106,0.6)] transition">
+                <a href="#contact" className="mt-10 inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-gold-400 via-gold-300 to-gold-400 px-7 py-3.5 text-sm font-semibold text-ink-950 shadow-gold-glow hover:shadow-[0_0_40px_rgba(223,189,106,0.6)] transition">
                   무료 상담 신청
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                     <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -665,8 +674,9 @@ export default function Home() {
       </section>
 
       {/* CONTACT — FAQ + INQUIRY */}
-      <section id="contact" className="py-20 md:py-28 bg-gradient-to-b from-gold-50/40 to-white">
-        <div className="container-x">
+      <section id="contact" className="py-20 md:py-28 bg-ink-950 relative">
+        <div className="absolute inset-0 bg-grid-dense opacity-30" />
+        <div className="relative container-x">
           <SectionHeader
             eyebrow="FAQ"
             title="자주하는 질문"
@@ -674,21 +684,21 @@ export default function Home() {
           />
           <div className="mt-14 max-w-3xl mx-auto space-y-3">
             {FAQ.map((f, i) => (
-              <details key={i} className="group rounded-2xl border border-gold-200/70 bg-white px-6 md:px-7 py-5 open:shadow-gold-soft open:border-gold-400/70 transition">
+              <details key={i} className="group rounded-2xl border border-white/10 bg-ink-800/50 backdrop-blur-sm px-6 md:px-7 py-5 open:border-gold-400/40 transition">
                 <summary className="flex items-start justify-between gap-4 cursor-pointer list-none">
                   <div className="flex items-start gap-4">
-                    <span className="grid place-items-center h-7 w-7 rounded-lg bg-gradient-to-br from-gold-500 to-gold-700 text-white text-xs font-black shrink-0 shadow-sm">Q</span>
-                    <span className="text-base md:text-lg font-bold text-ink-900">{f.q}</span>
+                    <span className="grid place-items-center h-7 w-7 rounded-lg bg-gradient-to-br from-gold-400 to-gold-600 text-ink-950 text-xs font-bold shrink-0 shadow-sm">Q</span>
+                    <span className="text-base md:text-lg font-medium text-white">{f.q}</span>
                   </div>
-                  <span className="text-gold-500 group-open:rotate-180 transition shrink-0">
+                  <span className="text-gold-400 group-open:rotate-180 transition shrink-0">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                       <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </span>
                 </summary>
                 <div className="mt-5 pl-11 flex items-start gap-4">
-                  <span className="grid place-items-center h-7 w-7 rounded-lg bg-gold-50 text-gold-700 border border-gold-200 text-xs font-black shrink-0 -ml-11">A</span>
-                  <p className="text-sm md:text-base leading-relaxed text-slate-600">{f.a}</p>
+                  <span className="grid place-items-center h-7 w-7 rounded-lg bg-gold-500/10 text-gold-300 border border-gold-500/30 text-xs font-bold shrink-0 -ml-11">A</span>
+                  <p className="text-sm md:text-base leading-relaxed text-slate-400 font-light">{f.a}</p>
                 </div>
               </details>
             ))}
@@ -697,27 +707,28 @@ export default function Home() {
       </section>
 
       {/* INQUIRY FORM */}
-      <section className="py-20 md:py-28 bg-white">
-        <div className="container-x">
+      <section className="py-20 md:py-28 bg-ink-900 relative">
+        <div className="absolute inset-0 bg-grid opacity-20" />
+        <div className="relative container-x">
           <SectionHeader
             eyebrow="INQUIRY"
             title="문의하기"
             description="아래 양식을 통해 문의해 주시면 빠르게 답변 드리겠습니다."
           />
           <div className="mt-14 grid gap-8 lg:grid-cols-12">
-            <div className="lg:col-span-4 relative rounded-3xl bg-gradient-to-br from-ink-900 via-ink-800 to-ink-900 text-white p-8 md:p-10 overflow-hidden border border-gold-500/25 shadow-xl">
+            <div className="lg:col-span-4 relative rounded-3xl bg-gradient-to-br from-ink-800 via-ink-900 to-ink-950 text-white p-8 md:p-10 overflow-hidden border border-gold-500/25 shadow-xl">
               <div className="absolute inset-0 bg-grid opacity-30" />
               <div className="absolute -top-6 -right-6 w-48 opacity-[0.08]">
                 <Image src="/logo/logo-icon.png" alt="" aria-hidden width={300} height={300} className="w-full object-contain" />
               </div>
               <div className="relative">
-                <div className="eyebrow text-gold-300" style={{ color: "#dfbd6a" }}>CONTACT INFO</div>
-                <h3 className="mt-4 font-serif text-2xl font-bold">언제든 문의해 주세요</h3>
+                <div className="eyebrow">CONTACT INFO</div>
+                <h3 className="mt-4 font-display text-2xl font-medium text-white">언제든 문의해 주세요</h3>
                 <div className="mt-5 h-px w-16 bg-gradient-to-r from-gold-400 to-transparent" />
                 <div className="mt-8 space-y-6">
                   <div>
-                    <div className="text-xs font-semibold text-gold-400 tracking-[0.2em]">TEL</div>
-                    <a href="tel:0269533081" className="mt-1 inline-flex items-center gap-2 text-2xl font-bold hover:text-gold-200 transition">
+                    <div className="text-xs font-medium text-gold-400 tracking-[0.25em]">TEL</div>
+                    <a href="tel:0269533081" className="mt-1 inline-flex items-center gap-2 text-2xl font-medium hover:text-gold-300 transition">
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-gold-400">
                         <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.37 1.9.72 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0122 16.92z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
@@ -725,12 +736,12 @@ export default function Home() {
                     </a>
                   </div>
                   <div>
-                    <div className="text-xs font-semibold text-gold-400 tracking-[0.2em]">HOURS</div>
-                    <div className="mt-1 text-base font-medium">평일 09:00 ~ 18:00</div>
+                    <div className="text-xs font-medium text-gold-400 tracking-[0.25em]">HOURS</div>
+                    <div className="mt-1 text-base font-medium text-slate-100">평일 09:00 ~ 18:00</div>
                     <div className="text-sm text-slate-400">(주말 및 공휴일 휴무)</div>
                   </div>
                 </div>
-                <div className="mt-10 pt-6 border-t border-gold-500/20 text-xs leading-relaxed text-slate-400">
+                <div className="mt-10 pt-6 border-t border-gold-500/15 text-xs leading-relaxed text-slate-500">
                   당해 업체는 금융투자업자가 아닌 유사투자자문업자로 개별적인 투자 상담과
                   자금 운용이 불가능합니다.
                 </div>

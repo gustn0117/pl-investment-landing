@@ -32,15 +32,17 @@ const config: Config = {
           950: "#2c1f11",
         },
         ink: {
+          950: "#04060c",
           900: "#07080f",
           800: "#0e1220",
           700: "#151b2e",
           600: "#1f2740",
+          500: "#2a3350",
         },
       },
       fontFamily: {
-        sans: ['var(--font-noto)', 'system-ui', 'sans-serif'],
-        serif: ['var(--font-playfair)', 'Georgia', 'serif'],
+        sans: ['var(--font-noto)', 'var(--font-grotesk)', 'system-ui', 'sans-serif'],
+        display: ['var(--font-grotesk)', 'var(--font-noto)', 'system-ui', 'sans-serif'],
       },
       animation: {
         'fade-up': 'fadeUp 0.8s ease-out both',
@@ -91,6 +93,7 @@ const config: Config = {
       boxShadow: {
         'gold-soft': '0 10px 30px -12px rgba(191,145,64,0.35)',
         'gold-glow': '0 20px 60px -15px rgba(223,189,106,0.45)',
+        'dark-panel': '0 30px 60px -25px rgba(0,0,0,0.6), 0 0 0 1px rgba(223,189,106,0.1)',
       },
     },
   },

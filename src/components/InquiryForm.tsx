@@ -19,21 +19,21 @@ export default function InquiryForm() {
 
   if (submitted) {
     return (
-      <div className="rounded-3xl border border-gold-300/70 bg-gradient-to-br from-gold-50 to-white p-10 md:p-14 text-center shadow-gold-soft">
-        <span className="grid place-items-center mx-auto h-16 w-16 rounded-full bg-gradient-to-br from-gold-400 to-gold-600 text-white shadow-gold-glow">
+      <div className="rounded-3xl border border-gold-400/40 bg-ink-800/60 backdrop-blur-sm p-10 md:p-14 text-center shadow-dark-panel">
+        <span className="grid place-items-center mx-auto h-16 w-16 rounded-full bg-gradient-to-br from-gold-400 to-gold-600 text-ink-950 shadow-gold-glow">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
             <path d="M5 12l5 5L20 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </span>
-        <h3 className="mt-6 font-serif text-2xl md:text-3xl font-bold text-ink-900">
+        <h3 className="mt-6 font-display text-2xl md:text-3xl font-medium text-white">
           문의가 접수되었습니다
         </h3>
-        <p className="mt-3 text-base text-slate-600">
+        <p className="mt-3 text-base text-slate-400">
           빠른 시일 내에 담당자가 연락드리겠습니다. 감사합니다.
         </p>
         <button
           onClick={() => setSubmitted(false)}
-          className="mt-8 inline-flex rounded-full border border-gold-500 px-6 py-2.5 text-sm font-semibold text-gold-700 hover:bg-gold-500 hover:text-white transition"
+          className="mt-8 inline-flex rounded-full border border-gold-400/60 px-6 py-2.5 text-sm font-medium text-gold-300 hover:bg-gold-400 hover:text-ink-950 transition"
         >
           새 문의 작성
         </button>
@@ -44,13 +44,13 @@ export default function InquiryForm() {
   return (
     <form
       onSubmit={onSubmit}
-      className="relative rounded-3xl border border-gold-200/70 bg-white p-8 md:p-10 shadow-gold-soft"
+      className="relative rounded-3xl border border-white/10 bg-ink-800/50 backdrop-blur-sm p-8 md:p-10 shadow-dark-panel"
     >
       <div
         className="absolute inset-x-0 top-0 h-px"
         style={{
           background:
-            "linear-gradient(90deg, transparent, rgba(191,145,64,0.6), transparent)",
+            "linear-gradient(90deg, transparent, rgba(223,189,106,0.6), transparent)",
         }}
       />
       <div className="grid gap-5 md:grid-cols-2">
@@ -79,8 +79,8 @@ export default function InquiryForm() {
         </Field>
       </div>
 
-      <label className="mt-6 flex items-start gap-2.5 text-xs text-slate-500">
-        <input type="checkbox" required className="mt-0.5 h-4 w-4 rounded border-gold-300 text-gold-500 focus:ring-gold-300" />
+      <label className="mt-6 flex items-start gap-2.5 text-xs text-slate-400">
+        <input type="checkbox" required className="mt-0.5 h-4 w-4 rounded border-gold-400/40 bg-ink-900 text-gold-400 focus:ring-gold-400/30" />
         <span>
           개인정보 수집·이용에 동의합니다. 수집된 정보는 문의 답변 목적 외에 사용되지
           않습니다.
@@ -104,7 +104,7 @@ export default function InquiryForm() {
 }
 
 const inputCls =
-  "w-full rounded-xl border border-gold-200/80 bg-white px-4 py-3 text-sm text-ink-900 placeholder:text-slate-400 focus:border-gold-500 focus:ring-2 focus:ring-gold-200 outline-none transition";
+  "w-full rounded-xl border border-white/10 bg-ink-900/60 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-gold-400/60 focus:bg-ink-900 focus:ring-2 focus:ring-gold-400/20 outline-none transition";
 
 function Field({
   label,
@@ -119,9 +119,9 @@ function Field({
 }) {
   return (
     <label className={`block ${className}`}>
-      <span className="block text-sm font-semibold text-ink-900">
+      <span className="block text-sm font-medium text-slate-200">
         {label}
-        {required && <span className="text-gold-600 ml-1">*</span>}
+        {required && <span className="text-gold-400 ml-1">*</span>}
       </span>
       <div className="mt-2">{children}</div>
     </label>

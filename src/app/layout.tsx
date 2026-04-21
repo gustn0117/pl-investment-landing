@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Noto_Sans_KR, Playfair_Display } from "next/font/google";
+import { Noto_Sans_KR, Space_Grotesk } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SmoothAnchors from "@/components/SmoothAnchors";
@@ -12,10 +12,10 @@ const noto = Noto_Sans_KR({
   display: "swap",
 });
 
-const playfair = Playfair_Display({
+const grotesk = Space_Grotesk({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  variable: "--font-playfair",
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-grotesk",
   display: "swap",
 });
 
@@ -27,8 +27,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ko" className={`${noto.variable} ${playfair.variable}`}>
-      <body className="font-sans antialiased text-ink-900 bg-white">
+    <html lang="ko" className={`${noto.variable} ${grotesk.variable}`}>
+      <body className="font-sans antialiased text-slate-200 bg-ink-950">
         <SmoothAnchors />
         <Header />
         <main>{children}</main>

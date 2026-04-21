@@ -31,9 +31,9 @@ export default function CTA({ title, subtitle, primary, secondary }: Props) {
       </div>
       <div className="relative container-x py-20 md:py-28 text-center">
         <div className="mx-auto divider-gold">
-          <span className="font-serif text-xs tracking-[0.4em] text-gold-300">PL INVESTMENT</span>
+          <span className="font-display text-xs tracking-[0.4em] text-gold-300">PL INVESTMENT</span>
         </div>
-        <h2 className="h-section mt-6 text-white max-w-3xl mx-auto font-serif">{title}</h2>
+        <h2 className="h-section mt-6 text-white max-w-3xl mx-auto">{title}</h2>
         {subtitle && (
           <p className="mt-5 text-base md:text-lg text-slate-300 max-w-2xl mx-auto">
             {subtitle}

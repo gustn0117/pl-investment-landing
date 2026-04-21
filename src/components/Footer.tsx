@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function Footer() {
   return (
-    <footer className="relative overflow-hidden bg-ink-900 text-slate-300">
+    <footer className="relative overflow-hidden bg-ink-950 text-slate-300">
       <div className="absolute inset-0 bg-grid opacity-40 pointer-events-none" />
       <div
         className="absolute inset-x-0 top-0 h-px pointer-events-none"
@@ -28,7 +28,7 @@ export default function Footer() {
                 />
               </span>
               <div className="flex flex-col">
-                <span className="font-serif text-xl font-bold tracking-[0.18em] text-white">
+                <span className="font-display text-xl font-semibold tracking-[0.18em] text-white">
                   PL INVESTMENT
                 </span>
                 <span className="mt-1 text-[11px] font-medium tracking-[0.3em] text-gold-400">

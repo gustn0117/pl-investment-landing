@@ -3,26 +3,28 @@
 @tailwind utilities;
 
 :root {
-  --bg: #ffffff;
-  --ink: #07080f;
-  --gold: #bf9140;
-  --gold-light: #dfbd6a;
-  --gold-dark: #85602c;
+  --bg: #04060c;
+  --surface: #0e1220;
+  --ink: #f8fafc;
+  --gold: #dfbd6a;
+  --gold-light: #ecd69c;
+  --gold-dark: #bf9140;
 }
 
 html, body { background: var(--bg); color: var(--ink); }
 html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
 section[id] { scroll-margin-top: 5rem; }
 
-::selection { background: rgba(191,145,64,0.3); color: #07080f; }
+::selection { background: rgba(223,189,106,0.4); color: #fff; }
 
 @layer components {
   .container-x { @apply mx-auto w-full max-w-6xl px-5 md:px-8; }
-  .h-display { @apply text-4xl md:text-6xl font-bold tracking-tight leading-[1.15]; }
-  .h-section { @apply text-3xl md:text-5xl font-bold tracking-tight leading-tight; }
+  .h-display { @apply font-display text-4xl md:text-6xl font-medium tracking-tight leading-[1.1]; }
+  .h-section { @apply font-display text-3xl md:text-5xl font-medium tracking-tight leading-[1.15]; }
   .eyebrow {
-    @apply inline-flex items-center gap-2 text-[11px] md:text-xs font-semibold tracking-[0.3em] uppercase;
+    @apply inline-flex items-center gap-2 text-[11px] md:text-xs font-medium tracking-[0.35em] uppercase;
     color: var(--gold);
+    font-family: var(--font-grotesk), system-ui, sans-serif;
   }
   .eyebrow::before {
     content: "";
@@ -30,7 +32,7 @@ section[id] { scroll-margin-top: 5rem; }
   }
 
   .btn-primary {
-    @apply relative inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-sm md:text-base font-semibold text-ink-900 transition overflow-hidden shadow-gold-soft hover:-translate-y-0.5 hover:shadow-gold-glow;
+    @apply relative inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-sm md:text-base font-medium text-ink-950 transition overflow-hidden shadow-gold-soft hover:-translate-y-0.5 hover:shadow-gold-glow;
     background: linear-gradient(135deg, #ecd69c 0%, #dfbd6a 40%, #bf9140 100%);
   }
   .btn-primary::after {
@@ -42,16 +44,17 @@ section[id] { scroll-margin-top: 5rem; }
   .btn-primary > * { @apply relative z-10; }
 
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 rounded-full border border-gold-400/40 bg-white/5 px-7 py-3.5 text-sm md:text-base font-semibold text-gold-200 backdrop-blur transition hover:bg-gold-400/10 hover:border-gold-300/70 hover:text-gold-100;
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-gold-400/35 bg-white/[0.03] px-7 py-3.5 text-sm md:text-base font-medium text-gold-200 backdrop-blur transition hover:bg-gold-400/10 hover:border-gold-300/70 hover:text-gold-100;
   }
   .btn-outline {
-    @apply inline-flex items-center justify-center gap-2 rounded-full border border-gold-500 px-7 py-3.5 text-sm md:text-base font-semibold text-gold-700 transition hover:bg-gold-500 hover:text-white;
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-gold-500/60 px-7 py-3.5 text-sm md:text-base font-medium text-gold-300 transition hover:bg-gold-500 hover:text-ink-950 hover:border-gold-500;
+  }
+
+  .surface {
+    @apply relative rounded-2xl border border-white/10 bg-ink-800/60 backdrop-blur-sm p-7 md:p-8 shadow-dark-panel;
   }
   .card-soft {
-    @apply relative rounded-2xl border border-slate-200 bg-white p-7 md:p-8 shadow-sm transition hover:shadow-xl hover:-translate-y-1 hover:border-gold-200;
-  }
-  .card-dark {
-    @apply relative rounded-2xl border border-white/10 bg-ink-800/60 backdrop-blur p-7 md:p-8 shadow-lg;
+    @apply relative rounded-2xl border border-white/10 bg-ink-800/60 backdrop-blur-sm p-7 md:p-8 shadow-dark-panel transition hover:border-gold-400/35 hover:-translate-y-1 hover:shadow-[0_30px_80px_-25px_rgba(223,189,106,0.25)];
   }
 
   .divider-gold {
@@ -70,36 +73,40 @@ section[id] { scroll-margin-top: 5rem; }
     background-clip: text;
     color: transparent;
   }
+
+  .surface-panel {
+    @apply relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-ink-800/80 via-ink-900/80 to-ink-900/60 backdrop-blur-sm;
+  }
 }
 
 /* Subtle grid background */
 .bg-grid {
   background-image:
-    linear-gradient(to right, rgba(223,189,106,0.08) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(223,189,106,0.08) 1px, transparent 1px);
+    linear-gradient(to right, rgba(223,189,106,0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(223,189,106,0.06) 1px, transparent 1px);
   background-size: 48px 48px;
 }
 
-.bg-grid-light {
+.bg-grid-dense {
   background-image:
-    linear-gradient(to right, rgba(191,145,64,0.07) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(191,145,64,0.07) 1px, transparent 1px);
-  background-size: 56px 56px;
+    linear-gradient(to right, rgba(223,189,106,0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(223,189,106,0.05) 1px, transparent 1px);
+  background-size: 32px 32px;
 }
 
 /* Animated gradient blob */
 .blob {
   position: absolute;
   border-radius: 9999px;
-  filter: blur(90px);
-  opacity: 0.35;
+  filter: blur(100px);
+  opacity: 0.25;
   pointer-events: none;
 }
 
 /* Gold hairline divider */
 .hairline-gold {
   height: 1px;
-  background: linear-gradient(90deg, transparent 0%, rgba(191,145,64,0.6) 50%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, rgba(191,145,64,0.55) 50%, transparent 100%);
 }
 
 /* Gold shimmer underline */
@@ -110,13 +117,25 @@ section[id] { scroll-margin-top: 5rem; }
   background-position: 0 100%;
 }
 
-/* Noise texture for premium feel */
-.texture-noise::before {
+/* Ambient vignette for dark sections */
+.vignette::after {
   content: "";
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
-  background-size: 3px 3px;
-  mix-blend-mode: overlay;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.5) 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee,
+  .animate-scan,
+  .animate-float,
+  .animate-shimmer,
+  .animate-slow-spin,
+  .animate-pulse-soft,
+  .animate-pulse,
+  .animate-fade-up,
+  .animate-fade-in {
+    animation: none !important;
+  }
 }
