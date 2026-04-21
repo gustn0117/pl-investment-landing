@@ -91,15 +91,15 @@ export default function StickyBottomCTA() {
         }}
       />
 
-      <div className="relative container-x py-6 md:py-8">
+      <div className="relative container-x py-4 md:py-5">
         {/* emphasis headline badge */}
-        <div className="flex justify-center mb-3 md:mb-4">
-          <div className="inline-flex items-center gap-2 rounded-full border border-gold-300/60 bg-gradient-to-r from-gold-500/18 via-gold-400/12 to-gold-500/18 px-4 md:px-5 py-1.5 md:py-2 shadow-[0_0_24px_-6px_rgba(223,189,106,0.55)]">
-            <span className="relative flex h-2 w-2">
+        <div className="flex justify-center mb-2 md:mb-3">
+          <div className="inline-flex items-center gap-2 rounded-full border border-gold-300/60 bg-gradient-to-r from-gold-500/18 via-gold-400/12 to-gold-500/18 px-3 md:px-4 py-1 md:py-1.5 shadow-[0_0_20px_-6px_rgba(223,189,106,0.5)]">
+            <span className="relative flex h-1.5 w-1.5">
               <span className="absolute inset-0 rounded-full bg-rose-400 animate-ping opacity-75" />
-              <span className="relative rounded-full h-2 w-2 bg-rose-400" />
+              <span className="relative rounded-full h-1.5 w-1.5 bg-rose-400" />
             </span>
-            <span className="text-xs md:text-sm font-bold tracking-tight text-gold-200">
+            <span className="text-[11px] md:text-xs font-bold tracking-tight text-gold-200">
               지금 신청 시 <span className="text-white">무료 VIP 종목</span> 즉시 발송
             </span>
           </div>
@@ -107,9 +107,9 @@ export default function StickyBottomCTA() {
 
         <form
           onSubmit={onSubmit}
-          className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 md:gap-4 max-w-4xl mx-auto"
+          className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5 md:gap-3 max-w-4xl mx-auto"
         >
-          <div className="flex flex-1 gap-3 md:gap-4 min-w-0">
+          <div className="flex flex-1 gap-2.5 md:gap-3 min-w-0">
             <input
               required
               type="text"
@@ -117,7 +117,7 @@ export default function StickyBottomCTA() {
               onChange={(e) => setName(e.target.value)}
               placeholder="이름"
               aria-label="이름"
-              className="flex-1 min-w-0 rounded-full bg-ink-800/90 border-2 border-gold-500/30 px-5 md:px-6 py-4 md:py-5 text-base md:text-lg text-white placeholder:text-slate-500 focus:border-gold-400 focus:ring-4 focus:ring-gold-400/20 outline-none transition"
+              className="flex-1 min-w-0 rounded-full bg-ink-800/90 border border-gold-500/30 px-4 md:px-5 py-2.5 md:py-3 text-sm md:text-base text-white placeholder:text-slate-500 focus:border-gold-400 focus:ring-2 focus:ring-gold-400/20 outline-none transition"
             />
             <input
               required
@@ -127,54 +127,54 @@ export default function StickyBottomCTA() {
               placeholder="휴대폰 번호"
               aria-label="휴대폰 번호"
               pattern="[0-9\\-\\s]{9,15}"
-              className="flex-1 min-w-0 rounded-full bg-ink-800/90 border-2 border-gold-500/30 px-5 md:px-6 py-4 md:py-5 text-base md:text-lg text-white placeholder:text-slate-500 focus:border-gold-400 focus:ring-4 focus:ring-gold-400/20 outline-none transition"
+              className="flex-1 min-w-0 rounded-full bg-ink-800/90 border border-gold-500/30 px-4 md:px-5 py-2.5 md:py-3 text-sm md:text-base text-white placeholder:text-slate-500 focus:border-gold-400 focus:ring-2 focus:ring-gold-400/20 outline-none transition"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="relative inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-gold-500 via-gold-200 to-gold-500 px-8 md:px-12 py-4 md:py-5 text-base md:text-xl font-bold text-ink-950 shadow-[0_15px_55px_-10px_rgba(223,189,106,0.8),inset_0_1px_0_rgba(255,255,255,0.45)] hover:shadow-[0_15px_75px_-5px_rgba(223,189,106,1),inset_0_1px_0_rgba(255,255,255,0.55)] hover:-translate-y-0.5 transition disabled:opacity-60 whitespace-nowrap tracking-tight animate-pulse-soft"
+            className="relative inline-flex items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-gold-500 via-gold-200 to-gold-500 px-6 md:px-9 py-2.5 md:py-3 text-sm md:text-base font-bold text-ink-950 shadow-[0_10px_40px_-10px_rgba(223,189,106,0.75),inset_0_1px_0_rgba(255,255,255,0.45)] hover:shadow-[0_12px_55px_-5px_rgba(223,189,106,0.95),inset_0_1px_0_rgba(255,255,255,0.55)] hover:-translate-y-0.5 transition disabled:opacity-60 whitespace-nowrap tracking-tight animate-pulse-soft"
           >
             <span className="absolute inset-0 rounded-full ring-2 ring-gold-100/50 pointer-events-none" />
             <span className="relative">{loading ? "전송 중..." : "무료 종목 받기"}</span>
             {!loading && (
-              <svg className="relative" width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <svg className="relative" width="16" height="16" viewBox="0 0 24 24" fill="none">
                 <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             )}
           </button>
         </form>
 
-        <div className="mt-4 md:mt-5 flex flex-wrap items-center justify-center gap-x-5 md:gap-x-7 gap-y-2 text-xs md:text-sm text-slate-400">
-          <label className="inline-flex items-center gap-2 cursor-pointer hover:text-gold-300 transition">
+        <div className="mt-3 md:mt-3.5 flex flex-wrap items-center justify-center gap-x-4 md:gap-x-6 gap-y-1.5 text-[11px] md:text-xs text-slate-400">
+          <label className="inline-flex items-center gap-1.5 cursor-pointer hover:text-gold-300 transition">
             <input
               type="checkbox"
               checked={allAgreed}
               onChange={toggleAll}
-              className="h-4 w-4 md:h-[18px] md:w-[18px] rounded border-gold-400/50 bg-ink-800 text-gold-400 focus:ring-gold-400/30 cursor-pointer"
+              className="h-3.5 w-3.5 md:h-4 md:w-4 rounded border-gold-400/50 bg-ink-800 text-gold-400 focus:ring-gold-400/30 cursor-pointer"
             />
             <span className="text-gold-300 font-semibold">모두 동의</span>
           </label>
 
-          <label className="inline-flex items-center gap-2 cursor-pointer hover:text-gold-300 transition">
+          <label className="inline-flex items-center gap-1.5 cursor-pointer hover:text-gold-300 transition">
             <input
               type="checkbox"
               checked={consent.privacy}
               onChange={(e) => setConsent((c) => ({ ...c, privacy: e.target.checked }))}
-              className="h-4 w-4 md:h-[18px] md:w-[18px] rounded border-gold-400/50 bg-ink-800 text-gold-400 focus:ring-gold-400/30 cursor-pointer"
+              className="h-3.5 w-3.5 md:h-4 md:w-4 rounded border-gold-400/50 bg-ink-800 text-gold-400 focus:ring-gold-400/30 cursor-pointer"
             />
             <span>
               <span className="text-rose-400 font-medium">(필수)</span> 개인정보 제3자 제공
             </span>
           </label>
 
-          <label className="inline-flex items-center gap-2 cursor-pointer hover:text-gold-300 transition">
+          <label className="inline-flex items-center gap-1.5 cursor-pointer hover:text-gold-300 transition">
             <input
               type="checkbox"
               checked={consent.marketing}
               onChange={(e) => setConsent((c) => ({ ...c, marketing: e.target.checked }))}
-              className="h-4 w-4 md:h-[18px] md:w-[18px] rounded border-gold-400/50 bg-ink-800 text-gold-400 focus:ring-gold-400/30 cursor-pointer"
+              className="h-3.5 w-3.5 md:h-4 md:w-4 rounded border-gold-400/50 bg-ink-800 text-gold-400 focus:ring-gold-400/30 cursor-pointer"
             />
             <span>
               <span className="text-rose-400 font-medium">(필수)</span> 광고성 정보수신
