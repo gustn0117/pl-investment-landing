@@ -1,4 +1,6 @@
 import Image from "next/image";
+import ChartBg from "./ChartBg";
+import OrbitalAccent from "./OrbitalAccent";
 
 type Props = {
   title: React.ReactNode;
@@ -10,9 +12,13 @@ type Props = {
 export default function CTA({ title, subtitle, primary, secondary }: Props) {
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-ink-900 via-ink-800 to-ink-900 text-white">
+      <ChartBg className="absolute inset-0 h-full w-full opacity-40" />
       <div className="absolute inset-0 bg-grid opacity-30" />
       <div className="blob bg-gold-500 -top-20 -left-10 w-96 h-96" />
       <div className="blob bg-gold-800 -bottom-24 -right-10 w-96 h-96" />
+      <div className="pointer-events-none absolute top-1/2 right-6 md:right-16 -translate-y-1/2 w-40 md:w-72 opacity-40 md:opacity-60 hidden sm:block">
+        <OrbitalAccent />
+      </div>
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-[0.05]">
         <Image
           src="/logo/logo-icon.png"

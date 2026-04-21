@@ -2,6 +2,11 @@ import Image from "next/image";
 import SectionHeader from "@/components/SectionHeader";
 import CTA from "@/components/CTA";
 import InquiryForm from "@/components/InquiryForm";
+import ChartBg from "@/components/ChartBg";
+import TickerTape from "@/components/TickerTape";
+import Sparkline from "@/components/Sparkline";
+import OrbitalAccent from "@/components/OrbitalAccent";
+import CandlestickField from "@/components/CandlestickField";
 
 const HIGHLIGHTS = [
   {
@@ -102,12 +107,12 @@ const PROCESS = [
 ];
 
 const RESULTS = [
-  { p: "2026.04", r: "+18.6%", c: 24, w: "79%", a: "+2.3%" },
-  { p: "2026.03", r: "+22.4%", c: 28, w: "82%", a: "+2.8%" },
-  { p: "2026.02", r: "+15.1%", c: 21, w: "76%", a: "+2.1%" },
-  { p: "2026.01", r: "+19.8%", c: 26, w: "80%", a: "+2.5%" },
-  { p: "2025.12", r: "+12.3%", c: 19, w: "73%", a: "+1.9%" },
-  { p: "2025.11", r: "+24.7%", c: 31, w: "84%", a: "+3.0%" },
+  { p: "2026.04", r: "+18.6%", c: 24, w: "79%", a: "+2.3%", pts: [100, 102, 101, 104, 107, 106, 109, 112, 114, 118, 116, 119] },
+  { p: "2026.03", r: "+22.4%", c: 28, w: "82%", a: "+2.8%", pts: [100, 103, 106, 105, 108, 111, 114, 113, 117, 120, 121, 122] },
+  { p: "2026.02", r: "+15.1%", c: 21, w: "76%", a: "+2.1%", pts: [100, 101, 100, 103, 105, 104, 107, 109, 111, 113, 114, 115] },
+  { p: "2026.01", r: "+19.8%", c: 26, w: "80%", a: "+2.5%", pts: [100, 102, 104, 103, 107, 110, 112, 114, 116, 115, 118, 120] },
+  { p: "2025.12", r: "+12.3%", c: 19, w: "73%", a: "+1.9%", pts: [100, 99, 101, 102, 104, 105, 103, 107, 108, 110, 111, 112] },
+  { p: "2025.11", r: "+24.7%", c: 31, w: "84%", a: "+3.0%", pts: [100, 103, 106, 108, 109, 112, 115, 117, 120, 121, 123, 125] },
 ];
 
 const REVIEWS = [
@@ -134,13 +139,31 @@ export default function Home() {
         id="home"
         className="relative overflow-hidden bg-gradient-to-br from-ink-900 via-ink-800 to-ink-900 text-white"
       >
-        <div className="absolute inset-0 bg-grid opacity-40" />
+        {/* Stock chart backdrop */}
+        <ChartBg className="absolute inset-0 h-full w-full opacity-60" />
+        <div className="absolute inset-0 bg-grid opacity-30" />
         <div className="blob bg-gold-500 -top-40 -left-20 w-[32rem] h-[32rem] animate-float" />
         <div className="blob bg-gold-800 top-1/3 -right-32 w-[36rem] h-[36rem]" />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-ink-900 to-transparent pointer-events-none" />
 
+        {/* Vertical scan line */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden hidden md:block">
+          <div
+            className="absolute inset-x-0 h-[2px] animate-scan"
+            style={{
+              background:
+                "linear-gradient(90deg, transparent, rgba(223,189,106,0.3), transparent)",
+            }}
+          />
+        </div>
+
+        {/* 3D orbital accent */}
+        <div className="pointer-events-none absolute top-1/4 right-4 md:right-16 w-48 md:w-80 opacity-40 md:opacity-60 hidden sm:block">
+          <OrbitalAccent />
+        </div>
+
         {/* Giant watermark logo */}
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-full md:w-[55%] flex items-center justify-center opacity-[0.06] md:opacity-[0.09]">
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-full md:w-[55%] flex items-center justify-center opacity-[0.04] md:opacity-[0.07]">
           <Image
             src="/logo/logo-icon.png"
             alt=""
@@ -210,6 +233,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* MARKET TICKER */}
+      <TickerTape />
 
       {/* LOGO BADGE STRIP */}
       <section className="relative bg-ink-900 border-y border-gold-500/15">
@@ -356,8 +382,9 @@ export default function Home() {
       </section>
 
       {/* PHILOSOPHY */}
-      <section className="relative py-20 md:py-28 bg-gradient-to-b from-gold-50/20 via-white to-gold-50/30">
-        <div className="container-x">
+      <section className="relative py-20 md:py-28 bg-gradient-to-b from-gold-50/20 via-white to-gold-50/30 overflow-hidden">
+        <CandlestickField className="absolute inset-0 w-full h-full opacity-[0.45] mix-blend-multiply" density={28} />
+        <div className="relative container-x">
           <SectionHeader
             eyebrow="OUR PHILOSOPHY"
             title="우리의 투자 철학"
@@ -418,6 +445,7 @@ export default function Home() {
             {SERVICES.map((s, i) => (
               <div key={s.title} className="grid gap-6 lg:grid-cols-12 items-stretch">
                 <div className="lg:col-span-5 relative rounded-3xl bg-gradient-to-br from-ink-900 via-ink-800 to-ink-900 text-white p-8 md:p-10 overflow-hidden border border-gold-500/20">
+                  <ChartBg className="absolute inset-0 h-full w-full opacity-40" variant="card" />
                   <div className="absolute inset-0 bg-grid opacity-30" />
                   <div className="absolute -right-8 -bottom-8 w-48 opacity-[0.08]">
                     <Image src="/logo/logo-icon.png" alt="" aria-hidden width={300} height={300} className="w-full object-contain" />
@@ -512,7 +540,7 @@ export default function Home() {
               <table className="w-full text-sm md:text-base">
                 <thead className="bg-gradient-to-r from-ink-900 via-ink-800 to-ink-900 text-white relative">
                   <tr>
-                    {["기간", "수익률", "매매 횟수", "승률", "평균"].map((h) => (
+                    {["기간", "수익률", "매매 횟수", "승률", "평균", "추이"].map((h) => (
                       <th key={h} className="px-6 py-5 text-left font-bold tracking-wide border-b border-gold-500/20">
                         <span className="text-gold-300 font-serif tracking-[0.15em] text-xs mr-2">·</span>
                         {h}
@@ -535,6 +563,9 @@ export default function Home() {
                       <td className="px-6 py-5 text-slate-700">{row.c}회</td>
                       <td className="px-6 py-5 text-slate-700 font-medium">{row.w}</td>
                       <td className="px-6 py-5 text-gold-700 font-semibold">{row.a}</td>
+                      <td className="px-6 py-5">
+                        <Sparkline points={row.pts} up width={110} height={32} />
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -603,6 +634,7 @@ export default function Home() {
               </p>
             </div>
             <div className="relative rounded-3xl bg-gradient-to-br from-ink-900 via-ink-800 to-ink-900 p-8 md:p-10 text-white overflow-hidden border border-gold-500/25 shadow-2xl">
+              <ChartBg className="absolute inset-0 h-full w-full opacity-45" variant="card" />
               <div className="absolute inset-0 bg-grid opacity-30" />
               <div className="absolute -top-10 -right-10 w-56 opacity-[0.08]">
                 <Image src="/logo/logo-icon.png" alt="" aria-hidden width={400} height={400} className="w-full object-contain" />

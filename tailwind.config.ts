@@ -48,6 +48,9 @@ const config: Config = {
         'float': 'float 6s ease-in-out infinite',
         'shimmer': 'shimmer 3s ease-in-out infinite',
         'slow-spin': 'spin 28s linear infinite',
+        'marquee': 'marquee 40s linear infinite',
+        'pulse-soft': 'pulseSoft 4s ease-in-out infinite',
+        'scan': 'scan 8s linear infinite',
       },
       keyframes: {
         fadeUp: {
@@ -65,6 +68,18 @@ const config: Config = {
         shimmer: {
           '0%, 100%': { opacity: '0.55' },
           '50%': { opacity: '1' },
+        },
+        marquee: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-33.333%)' },
+        },
+        pulseSoft: {
+          '0%, 100%': { opacity: '0.3' },
+          '50%': { opacity: '0.7' },
+        },
+        scan: {
+          '0%': { transform: 'translateY(-100%)' },
+          '100%': { transform: 'translateY(100%)' },
         },
       },
       backgroundImage: {
