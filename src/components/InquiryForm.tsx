@@ -7,14 +7,37 @@ const TYPES = ["투자 상담", "포트폴리오 점검", "제휴 문의", "기�
 export default function InquiryForm() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setError(null);
+    const fd = new FormData(e.currentTarget);
+    const payload = {
+      name: String(fd.get("name") || ""),
+      phone: String(fd.get("phone") || ""),
+      email: String(fd.get("email") || ""),
+      type: String(fd.get("type") || ""),
+      message: String(fd.get("message") || ""),
+    };
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      const res = await fetch("/api/inquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(json.error || "전송에 실패했습니다. 잠시 후 다시 시도해 주세요.");
+        return;
+      }
       setSubmitted(true);
-    }, 600);
+    } catch {
+      setError("네트워크 오류가 발생했습니다.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   if (submitted) {
@@ -55,22 +78,23 @@ export default function InquiryForm() {
       />
       <div className="grid gap-5 md:grid-cols-2">
         <Field label="이름" required>
-          <input type="text" required className={inputCls} placeholder="홍길동" />
+          <input name="name" type="text" required className={inputCls} placeholder="홍길동" />
         </Field>
         <Field label="연락처" required>
-          <input type="tel" required className={inputCls} placeholder="010-0000-0000" />
+          <input name="phone" type="tel" required className={inputCls} placeholder="010-0000-0000" />
         </Field>
         <Field label="이메일" className="md:col-span-2">
-          <input type="email" className={inputCls} placeholder="example@email.com" />
+          <input name="email" type="email" className={inputCls} placeholder="example@email.com" />
         </Field>
         <Field label="문의 유형" required className="md:col-span-2">
-          <select required className={inputCls + " appearance-none bg-no-repeat bg-[right_1rem_center] bg-[length:14px]"} defaultValue="">
+          <select name="type" required className={inputCls + " appearance-none bg-no-repeat bg-[right_1rem_center] bg-[length:14px]"} defaultValue="">
             <option value="" disabled>유형을 선택해 주세요</option>
             {TYPES.map((t) => <option key={t}>{t}</option>)}
           </select>
         </Field>
         <Field label="문의 내용" required className="md:col-span-2">
           <textarea
+            name="message"
             required
             rows={6}
             className={inputCls + " resize-none"}
@@ -86,6 +110,12 @@ export default function InquiryForm() {
           않습니다.
         </span>
       </label>
+
+      {error && (
+        <div className="mt-4 rounded-lg border border-rose-400/40 bg-rose-500/10 px-4 py-2.5 text-sm text-rose-300">
+          {error}
+        </div>
+      )}
 
       <button
         type="submit"

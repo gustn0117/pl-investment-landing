@@ -16,17 +16,35 @@ export default function StickyBottomCTA() {
     setConsent({ privacy: v, marketing: v });
   }
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!consent.privacy || !consent.marketing) {
       alert("필수 약관에 동의해 주세요.");
       return;
     }
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      const res = await fetch("/api/lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          phone,
+          consent_privacy: consent.privacy,
+          consent_marketing: consent.marketing,
+        }),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        alert(json.error || "전송에 실패했습니다.");
+        return;
+      }
       setSubmitted(true);
-    }, 600);
+    } catch {
+      alert("네트워크 오류가 발생했습니다.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   if (submitted) {

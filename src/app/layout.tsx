@@ -1,9 +1,5 @@
 import type { Metadata } from "next";
 import { Noto_Sans_KR, Space_Grotesk } from "next/font/google";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import SmoothAnchors from "@/components/SmoothAnchors";
-import StickyBottomCTA from "@/components/StickyBottomCTA";
 import "./globals.css";
 
 const noto = Noto_Sans_KR({
@@ -29,12 +25,8 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko" className={`${noto.variable} ${grotesk.variable}`}>
-      <body className="font-sans antialiased text-slate-200 bg-ink-950 pb-[156px] md:pb-[120px]">
-        <SmoothAnchors />
-        <Header />
-        <main>{children}</main>
-        <Footer />
-        <StickyBottomCTA />
+      <body className="font-sans antialiased text-slate-200 bg-ink-950">
+        {children}
       </body>
     </html>
   );
