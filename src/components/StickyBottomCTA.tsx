@@ -70,18 +70,8 @@ export default function StickyBottomCTA() {
       <div className="container-x py-3 md:py-4">
         <form
           onSubmit={onSubmit}
-          className="flex flex-col lg:flex-row items-stretch lg:items-center gap-3"
+          className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2 sm:gap-3 max-w-3xl mx-auto"
         >
-          <div className="flex items-center gap-2 text-[13px] md:text-sm font-medium whitespace-nowrap">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className="text-gold-400 shrink-0">
-              <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 16.8 5.8 21.3l2.4-7.4L2 9.4h7.6z" />
-            </svg>
-            <span className="text-slate-200 hidden md:inline">PL Investment 주력 종목</span>
-            <span className="md:hidden text-slate-200">주력 종목</span>
-            <span className="text-gold-300 font-semibold">3일간 100% 무료</span>
-            <span className="text-slate-200">추천</span>
-          </div>
-
           <div className="flex flex-1 gap-2 min-w-0">
             <input
               required
@@ -118,7 +108,7 @@ export default function StickyBottomCTA() {
           </button>
         </form>
 
-        <div className="mt-2.5 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[11px] md:text-xs text-slate-400">
+        <div className="mt-2.5 flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-[11px] md:text-xs text-slate-400">
           <label className="inline-flex items-center gap-1.5 cursor-pointer hover:text-gold-300 transition">
             <input
               type="checkbox"
