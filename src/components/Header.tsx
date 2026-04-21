@@ -5,10 +5,9 @@ import { useEffect, useState } from "react";
 
 const NAV = [
   { href: "#home", label: "메인" },
-  { href: "#about", label: "회사 소개" },
   { href: "#services", label: "서비스 안내" },
   { href: "#results", label: "수익내역" },
-  { href: "#contact", label: "고객센터" },
+  { href: "#contact", label: "문의하기" },
 ];
 
 export default function Header() {

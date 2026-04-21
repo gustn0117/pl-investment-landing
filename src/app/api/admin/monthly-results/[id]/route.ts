@@ -54,8 +54,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     }
     if (body.average !== undefined) {
       const v = sanitize(body.average, 20);
-      if (!v) return NextResponse.json({ error: "평균 필수" }, { status: 400 });
-      update.average = v;
+      update.average = v || null;
     }
     if (body.trade_count !== undefined) {
       const v = Number.parseInt(String(body.trade_count), 10);

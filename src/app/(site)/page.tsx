@@ -41,36 +41,11 @@ const VALUES = [
   { n: "04", t: "포트폴리오 전략 점검", d: "시장 흐름을 반영해 구조를 점검하고 효율적인 운용 전략을 제안합니다." },
 ];
 
-const COMPANY = [
-  { k: "회사명", v: "PL Investment (피엘 인베스트먼트)" },
-  { k: "사업 분야", v: "주식 투자 분석 및 컨설팅" },
-  { k: "연락처", v: "TEL. 02-6953-3081" },
-  { k: "운영시간", v: "평일 09:00 ~ 18:00" },
-];
-
 const PHILOSOPHY = [
   { n: "01", t: "체계적인 시장 분석", d: "기업의 펀더멘털을 체계적으로 분석하여 현재 주가의 흐름을 정확하게 파악하고, 투자자에게 신뢰할 수 있는 분석을 제공합니다." },
   { n: "02", t: "포트폴리오 전략 점검", d: "시장 흐름을 반영해 효율적인 운용 전략과 수익 가능성을 높이는 투자 방향을 제시합니다." },
   { n: "03", t: "투자자를 위한 정보 서비스", d: "주식투자자들에게 도움이 되는 주식정보를 서비스로 제공하며, 시장의 흐름 속에서 기회를 포착할 수 있도록 지원합니다." },
   { n: "04", t: "함께 성장하는 파트너십", d: "투자자와 함께 성장하는 파트너가 되어, 흔들리지 않는 원칙과 철학으로 더 나은 투자 판단을 할 수 있도록 돕겠습니다." },
-];
-
-const REASONS = [
-  {
-    t: "신뢰할 수 있는 분석",
-    d: "감에 의존하지 않는 체계적인 데이터 기반 분석으로 투자의 근거를 명확하게 제시합니다.",
-    icon: <path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7l3-7z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />,
-  },
-  {
-    t: "높은 고객 만족도",
-    d: "96%의 고객 만족도가 증명하는 서비스 품질. 실제 고객들의 후기로 확인할 수 있습니다.",
-    icon: <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />,
-  },
-  {
-    t: "투자 컨설팅",
-    d: "시장 흐름과 투자 환경을 종합적으로 반영하여 효율적인 자산 운용 방향과 투자 전략을 설계합니다.",
-    icon: <path d="M3 3v18h18M7 14l4-4 4 4 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />,
-  },
 ];
 
 const SERVICES = [
@@ -94,13 +69,6 @@ const SERVICES = [
   },
 ];
 
-const ADVANTAGES = [
-  { t: "원칙 있는 투자 철학", d: "단순 종목 추천이 아닌, 시장 구조를 이해하고 스스로 판단할 수 있는 투자 역량을 키워드립니다." },
-  { t: "체계적인 리포트 시스템", d: "정기적으로 제공되는 시장 분석 리포트를 통해 투자의 방향성을 명확하게 제시합니다." },
-  { t: "검증된 성과", d: "투명하게 공개되는 수익 내역과 높은 고객 만족도가 PL Investment의 실력을 증명합니다." },
-  { t: "신속한 대응", d: "시장의 급변하는 상황에 빠르게 대응하여, 적시에 투자 의사결정을 내릴 수 있도록 지원합니다." },
-];
-
 const PROCESS = [
   { n: "STEP 01", t: "상담 신청", d: "전화 또는 온라인을 통해 무료 상담을 신청합니다" },
   { n: "STEP 02", t: "현황 분석", d: "현재 투자 현황과 포트폴리오를 정밀 분석합니다" },
@@ -113,15 +81,6 @@ const REVIEWS = [
   { n: "이OO", m: "40대 / 자영업", r: "혼자서는 파악하기 어려웠던 시장 흐름을 깊이 있게 분석해 주셔서 큰 도움이 됐습니다. 덕분에 더 나은 투자 결정을 내릴 수 있었어요." },
   { n: "박OO", m: "30대 / 프리랜서", r: "다른 곳에서 큰 손실을 보고 왔는데, 여기서 기초부터 다시 접근하면서 투자 마인드 자체가 바뀌었습니다. 이제는 흔들리지 않고 판단할 수 있어요." },
   { n: "최OO", m: "50대 / 사업가", r: "데이터 기반의 분석이 정말 체계적이에요. 단계별로 차근차근 설명해 주셔서 시장 구조를 자연스럽게 이해하게 됐습니다." },
-];
-
-const FAQ = [
-  { q: "투자 경험이 전혀 없어도 서비스를 이용할 수 있나요?", a: "네, 물론입니다. PL Investment는 초보 투자자부터 경험 있는 투자자까지 모든 수준에 맞는 분석과 컨설팅을 제공합니다." },
-  { q: "서비스는 어떻게 진행되나요?", a: "시장 분석 리포트 제공, 투자 컨설팅, 포트폴리오 점검 등을 진행합니다. 상담을 통해 고객에게 맞는 서비스를 안내드립니다." },
-  { q: "종목 추천을 해주시나요?", a: "PL Investment는 단순 종목 추천이 아닌, 시장 구조와 산업 흐름을 깊이 있게 분석하여 투자자가 스스로 판단할 수 있는 가치 있는 투자 아이디어를 제시합니다." },
-  { q: "수익이 보장되나요?", a: "투자에는 항상 리스크가 따르기 때문에 수익을 100% 보장할 수는 없습니다. 다만, 체계적인 분석을 통해 리스크를 관리하고 안정적인 수익을 추구할 수 있도록 돕습니다." },
-  { q: "서비스 이용 비용은 어떻게 되나요?", a: "서비스별 상세 비용은 상담을 통해 안내드리고 있습니다. 무료 상담을 통해 자세한 내용을 확인해 보세요." },
-  { q: "상담은 어떻게 신청하나요?", a: "아래 문의 양식을 통해 신청하시거나, 전화(02-6953-3081)로 문의해 주시면 빠르게 안내드리겠습니다." },
 ];
 
 export default async function Home() {
@@ -192,13 +151,13 @@ export default async function Home() {
             </p>
 
             <div className="mt-10 flex flex-col sm:flex-row gap-3 animate-fade-up" style={{ animationDelay: "0.2s" }}>
-              <a href="#about" className="btn-primary">
-                회사 소개 보기
+              <a href="#contact" className="btn-primary">
+                무료 상담 신청
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                   <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </a>
-              <a href="#contact" className="btn-ghost">상담 문의하기</a>
+              <a href="#services" className="btn-ghost">서비스 살펴보기</a>
             </div>
 
             <div className="mt-16 grid grid-cols-3 max-w-xl gap-x-6 animate-fade-up" style={{ animationDelay: "0.3s" }}>
@@ -276,58 +235,6 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ABOUT — CEO MESSAGE */}
-      <section id="about" className="relative py-20 md:py-32 bg-ink-900 overflow-hidden">
-        <div className="absolute top-20 right-0 w-[40%] opacity-[0.03] pointer-events-none">
-          <Image src="/logo/logo-icon.png" alt="" aria-hidden width={600} height={600} className="w-full object-contain" />
-        </div>
-        <div className="blob bg-gold-600 bottom-20 -right-40 w-[28rem] h-[28rem]" />
-        <div className="relative container-x">
-          <div className="grid gap-12 lg:grid-cols-12">
-            <div className="lg:col-span-4">
-              <div className="eyebrow">CEO MESSAGE</div>
-              <h2 className="h-section mt-4 text-white">대표 인사말</h2>
-              <div className="mt-8 relative rounded-2xl bg-gradient-to-br from-ink-800/80 to-ink-900/60 backdrop-blur-sm p-7 overflow-hidden border border-gold-500/15">
-                <div className="absolute inset-0 bg-grid opacity-25" />
-                <div className="relative">
-                  <div className="font-display text-sm tracking-[0.3em] text-gold-400">PL INVESTMENT</div>
-                  <div className="mt-2 text-2xl font-medium text-white">대표</div>
-                  <div className="mt-5 hairline-gold" />
-                  <div className="mt-5 text-xs text-slate-400 leading-relaxed">
-                    체계적인 분석과 원칙 있는 투자로 투자자와 함께 성장하는 파트너가
-                    되겠습니다.
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="lg:col-span-8">
-              <p className="font-display text-2xl md:text-3xl font-light leading-snug text-white">
-                금융 시장은 끊임없이 변화하며,<br className="hidden md:block" />
-                <span className="text-gold-gradient font-medium">그 속에서 기회는 언제나 새로운 형태로 나타납니다.</span>
-              </p>
-              <div className="mt-8 space-y-5 text-base md:text-lg leading-relaxed text-slate-300 font-light">
-                <p>PL Investment는 이러한 시장의 흐름을 분석하고 투자자들이 올바른 방향으로 나아갈 수 있도록 돕는 주식 투자 전문 회사입니다.</p>
-                <p>우리는 단순한 정보 전달이 아닌 시장 구조와 산업의 흐름을 깊이 있게 분석하여 가치 있는 투자 아이디어를 제시합니다.</p>
-                <p>수많은 변수와 노이즈 속에서도 냉정한 데이터 분석과 경험을 기반으로 투자의 본질에 집중합니다.</p>
-              </div>
-              <div className="mt-10 relative rounded-2xl border-l-2 border-gold-400 bg-gradient-to-r from-gold-500/10 to-transparent p-7 md:p-8">
-                <svg width="32" height="32" viewBox="0 0 32 32" className="absolute -top-4 left-6 text-gold-400" fill="currentColor">
-                  <path d="M10 8c-3.3 0-6 2.7-6 6v8h8v-8H6c0-2.2 1.8-4 4-4V8zm12 0c-3.3 0-6 2.7-6 6v8h8v-8h-6c0-2.2 1.8-4 4-4V8z" />
-                </svg>
-                <p className="text-base md:text-lg font-medium text-white leading-relaxed">
-                  PL Investment의 목표는 단 하나입니다.<br />
-                  <span className="text-gold-300">투자자들이 더 나은 투자 판단을 할 수 있도록 돕는 것.</span>
-                </p>
-                <p className="mt-3 text-sm md:text-base text-slate-400 leading-relaxed font-light">
-                  시장의 변화 속에서도 흔들리지 않는 원칙과 철학으로 투자자와 함께
-                  성장하는 파트너가 되겠습니다.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* OUR VALUES */}
       <section className="relative py-20 md:py-28 bg-ink-950">
         <div className="absolute inset-0 bg-grid-dense opacity-30" />
@@ -346,26 +253,6 @@ export default async function Home() {
                 </div>
                 <div className="mt-3 h-px w-12 bg-gradient-to-r from-gold-400 to-transparent" />
                 <p className="mt-4 text-sm md:text-base leading-relaxed text-slate-400 font-light">{v.d}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* COMPANY OVERVIEW */}
-      <section className="py-20 md:py-28 bg-ink-900 relative">
-        <div className="absolute inset-0 bg-grid opacity-20" />
-        <div className="relative container-x">
-          <SectionHeader
-            eyebrow="COMPANY OVERVIEW"
-            title="회사 개요"
-            description="PL Investment의 기본 정보입니다."
-          />
-          <div className="mt-12 max-w-3xl mx-auto rounded-3xl bg-ink-800/50 backdrop-blur-sm border border-white/10 overflow-hidden divide-y divide-white/5 shadow-dark-panel">
-            {COMPANY.map((c) => (
-              <div key={c.k} className="grid grid-cols-3 md:grid-cols-4">
-                <div className="col-span-1 bg-gold-500/5 px-6 py-5 text-sm font-medium text-gold-300 border-r border-white/5">{c.k}</div>
-                <div className="col-span-2 md:col-span-3 px-6 py-5 text-sm md:text-base text-slate-200 font-light">{c.v}</div>
               </div>
             ))}
           </div>
@@ -393,33 +280,6 @@ export default async function Home() {
                     <p className="mt-4 text-sm md:text-base leading-relaxed text-slate-400 font-light">{p.d}</p>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* WHY PL */}
-      <section className="relative py-20 md:py-28 bg-ink-900 overflow-hidden">
-        <div className="absolute -left-40 top-1/2 -translate-y-1/2 w-[36rem] opacity-[0.03] pointer-events-none">
-          <Image src="/logo/logo-icon.png" alt="" aria-hidden width={600} height={600} className="w-full object-contain" />
-        </div>
-        <div className="absolute inset-0 bg-grid opacity-20" />
-        <div className="relative container-x">
-          <SectionHeader
-            eyebrow="WHY PL INVESTMENT"
-            title="PL Investment를 선택하는 이유"
-            description="투자자들이 PL Investment와 함께하는 이유는 명확합니다."
-          />
-          <div className="mt-14 grid gap-6 md:grid-cols-3">
-            {REASONS.map((r) => (
-              <div key={r.t} className="group relative rounded-2xl bg-ink-800/50 backdrop-blur-sm border border-white/10 p-8 text-center shadow-dark-panel hover:border-gold-400/35 hover:shadow-[0_30px_80px_-25px_rgba(223,189,106,0.25)] transition">
-                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold-400/70 to-transparent opacity-0 group-hover:opacity-100 transition" />
-                <span className="inline-grid place-items-center h-16 w-16 rounded-2xl bg-gold-500/10 text-gold-300 border border-gold-500/25 group-hover:from-gold-400 group-hover:to-gold-600 group-hover:bg-gradient-to-br group-hover:text-ink-950 group-hover:border-transparent transition">
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none">{r.icon}</svg>
-                </span>
-                <h3 className="mt-6 font-display text-xl font-medium text-white">{r.t}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-slate-400 font-light">{r.d}</p>
               </div>
             ))}
           </div>
@@ -463,30 +323,6 @@ export default async function Home() {
                     ))}
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ADVANTAGES */}
-      <section className="py-20 md:py-28 bg-ink-900 relative">
-        <div className="absolute inset-0 bg-grid opacity-20" />
-        <div className="relative container-x">
-          <SectionHeader
-            eyebrow="ADVANTAGES"
-            title="PL Investment만의 차별화"
-            description="다른 곳과는 다른 PL Investment의 차별화된 가치를 확인해 보세요."
-          />
-          <div className="mt-14 grid gap-px bg-white/[0.04] md:grid-cols-2 rounded-3xl overflow-hidden border border-white/10 shadow-dark-panel">
-            {ADVANTAGES.map((a, i) => (
-              <div key={a.t} className="bg-ink-800/50 backdrop-blur-sm p-8 md:p-10 hover:bg-ink-700/50 transition group">
-                <div className="flex items-baseline gap-4">
-                  <span className="font-display text-3xl font-light text-gold-400/40 group-hover:text-gold-400 transition">{String(i + 1).padStart(2, "0")}</span>
-                  <h3 className="text-lg md:text-xl font-medium text-white">{a.t}</h3>
-                </div>
-                <div className="mt-3 h-px w-12 bg-gradient-to-r from-gold-400 to-transparent" />
-                <p className="mt-4 text-sm md:text-base leading-relaxed text-slate-400 font-light">{a.d}</p>
               </div>
             ))}
           </div>
@@ -538,7 +374,7 @@ export default async function Home() {
               <table className="w-full text-sm md:text-base">
                 <thead className="bg-gradient-to-r from-ink-800 via-ink-700 to-ink-800 text-white relative">
                   <tr>
-                    {["기간", "수익률", "매매 횟수", "승률", "평균", "추이"].map((h) => (
+                    {["기간", "한달 수익률", "승률", "추이"].map((h) => (
                       <th key={h} className="px-6 py-5 text-left font-medium tracking-wide border-b border-gold-500/20">
                         <span className="text-gold-300 font-display tracking-[0.15em] text-xs mr-2">·</span>
                         {h}
@@ -551,18 +387,16 @@ export default async function Home() {
                     <tr key={row.period} className="hover:bg-gold-500/5 transition">
                       <td className="px-6 py-5 font-medium text-white font-display">{row.period}</td>
                       <td className="px-6 py-5">
-                        <span className="inline-flex items-center gap-1 rounded-full bg-rose-500/15 border border-rose-400/30 px-3 py-1 text-sm font-semibold text-rose-300">
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-500/15 border border-rose-400/30 px-3.5 py-1.5 text-base font-bold text-rose-300 tabular-nums">
                           <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
                             <path d="M5 15l7-7 7 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                           {row.return_rate}
                         </span>
                       </td>
-                      <td className="px-6 py-5 text-slate-300">{row.trade_count}회</td>
-                      <td className="px-6 py-5 text-slate-300 font-medium">{row.win_rate}</td>
-                      <td className="px-6 py-5 text-gold-300 font-semibold">{row.average}</td>
+                      <td className="px-6 py-5 text-slate-300 font-medium tabular-nums">{row.win_rate}</td>
                       <td className="px-6 py-5">
-                        <Sparkline points={row.points} up width={110} height={32} />
+                        <Sparkline points={row.points} up width={130} height={36} />
                       </td>
                     </tr>
                   ))}
@@ -664,41 +498,8 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* CONTACT — FAQ + INQUIRY */}
-      <section id="contact" className="py-20 md:py-28 bg-ink-950 relative">
-        <div className="absolute inset-0 bg-grid-dense opacity-30" />
-        <div className="relative container-x">
-          <SectionHeader
-            eyebrow="FAQ"
-            title="자주하는 질문"
-            description="고객님들이 자주 문의하시는 질문들을 모았습니다."
-          />
-          <div className="mt-14 max-w-3xl mx-auto space-y-3">
-            {FAQ.map((f, i) => (
-              <details key={i} className="group rounded-2xl border border-white/10 bg-ink-800/50 backdrop-blur-sm px-6 md:px-7 py-5 open:border-gold-400/40 transition">
-                <summary className="flex items-start justify-between gap-4 cursor-pointer list-none">
-                  <div className="flex items-start gap-4">
-                    <span className="grid place-items-center h-7 w-7 rounded-lg bg-gradient-to-br from-gold-400 to-gold-600 text-ink-950 text-xs font-bold shrink-0 shadow-sm">Q</span>
-                    <span className="text-base md:text-lg font-medium text-white">{f.q}</span>
-                  </div>
-                  <span className="text-gold-400 group-open:rotate-180 transition shrink-0">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                      <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </span>
-                </summary>
-                <div className="mt-5 pl-11 flex items-start gap-4">
-                  <span className="grid place-items-center h-7 w-7 rounded-lg bg-gold-500/10 text-gold-300 border border-gold-500/30 text-xs font-bold shrink-0 -ml-11">A</span>
-                  <p className="text-sm md:text-base leading-relaxed text-slate-400 font-light">{f.a}</p>
-                </div>
-              </details>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* INQUIRY FORM */}
-      <section className="py-20 md:py-28 bg-ink-900 relative">
+      <section id="contact" className="py-20 md:py-28 bg-ink-900 relative">
         <div className="absolute inset-0 bg-grid opacity-20" />
         <div className="relative container-x">
           <SectionHeader

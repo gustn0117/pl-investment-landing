@@ -51,10 +51,9 @@ export default function Footer() {
             <h4 className="text-sm font-bold text-white tracking-wider">바로가기</h4>
             <div className="mt-3 h-px w-8 bg-gradient-to-r from-gold-500 to-transparent" />
             <ul className="mt-5 space-y-3 text-sm">
-              <li><a href="#about" className="hover:text-gold-300 transition">회사 소개</a></li>
               <li><a href="#services" className="hover:text-gold-300 transition">서비스 안내</a></li>
               <li><a href="#results" className="hover:text-gold-300 transition">수익내역</a></li>
-              <li><a href="#contact" className="hover:text-gold-300 transition">고객센터</a></li>
+              <li><a href="#contact" className="hover:text-gold-300 transition">문의하기</a></li>
             </ul>
           </div>
 

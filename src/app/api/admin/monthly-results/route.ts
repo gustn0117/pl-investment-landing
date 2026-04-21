@@ -44,23 +44,28 @@ export async function POST(req: Request) {
     const period = sanitize(body.period, 20);
     const return_rate = sanitize(body.return_rate, 20);
     const win_rate = sanitize(body.win_rate, 20);
-    const average = sanitize(body.average, 20);
-    const trade_count = Number.parseInt(String(body.trade_count ?? 0), 10);
     const points = parsePoints(body.points);
 
-    if (!period || !return_rate || !win_rate || !average) {
+    if (!period || !return_rate || !win_rate) {
       return NextResponse.json({ error: "필수 항목 누락" }, { status: 400 });
-    }
-    if (!Number.isInteger(trade_count) || trade_count < 0) {
-      return NextResponse.json({ error: "매매 횟수는 0 이상 정수" }, { status: 400 });
     }
     if (!points || points.length < 2) {
       return NextResponse.json({ error: "추이 포인트는 2개 이상" }, { status: 400 });
     }
 
+    const row: Record<string, unknown> = { period, return_rate, win_rate, points };
+    if (body.trade_count !== undefined) {
+      const n = Number.parseInt(String(body.trade_count), 10);
+      if (Number.isInteger(n) && n >= 0) row.trade_count = n;
+    }
+    if (body.average !== undefined) {
+      const v = sanitize(body.average, 20);
+      if (v) row.average = v;
+    }
+
     const { data, error } = await supabaseAdmin()
       .from("monthly_results")
-      .insert({ period, return_rate, trade_count, win_rate, average, points })
+      .insert(row)
       .select()
       .single();
 

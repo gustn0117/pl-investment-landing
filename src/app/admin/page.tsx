@@ -27,9 +27,7 @@ type MonthlyResult = {
   id: number;
   period: string;
   return_rate: string;
-  trade_count: number;
   win_rate: string;
-  average: string;
   points: number[];
   created_at: string;
   updated_at: string;
@@ -525,10 +523,8 @@ function MonthlyResultsTable({
               <thead className="bg-ink-900/80 text-slate-400 text-left">
                 <tr>
                   <th className="px-4 py-3 font-medium">기간</th>
-                  <th className="px-4 py-3 font-medium">수익률</th>
-                  <th className="px-4 py-3 font-medium">매매 횟수</th>
+                  <th className="px-4 py-3 font-medium">한달 수익률</th>
                   <th className="px-4 py-3 font-medium">승률</th>
-                  <th className="px-4 py-3 font-medium">평균</th>
                   <th className="px-4 py-3 font-medium">추이(포인트 수)</th>
                   <th className="px-4 py-3 font-medium">수정일</th>
                   <th className="px-4 py-3 font-medium">관리</th>
@@ -539,9 +535,7 @@ function MonthlyResultsTable({
                   <tr key={r.id} className="hover:bg-white/[0.02] transition">
                     <td className="px-4 py-3 text-white font-medium font-display tabular-nums">{r.period}</td>
                     <td className="px-4 py-3 text-rose-300 font-semibold tabular-nums">{r.return_rate}</td>
-                    <td className="px-4 py-3 text-slate-300 tabular-nums">{r.trade_count}회</td>
                     <td className="px-4 py-3 text-slate-300 tabular-nums">{r.win_rate}</td>
-                    <td className="px-4 py-3 text-gold-300 font-semibold tabular-nums">{r.average}</td>
                     <td className="px-4 py-3 text-slate-400 tabular-nums">{r.points.length}개</td>
                     <td className="px-4 py-3 text-slate-500 whitespace-nowrap tabular-nums text-xs">{fmtDate(r.updated_at)}</td>
                     <td className="px-4 py-3 whitespace-nowrap">
@@ -596,9 +590,7 @@ function MonthlyResultDialog({
   const isEdit = Boolean(initial);
   const [period, setPeriod] = useState(initial?.period || "");
   const [returnRate, setReturnRate] = useState(initial?.return_rate || "+0.0%");
-  const [tradeCount, setTradeCount] = useState(String(initial?.trade_count ?? ""));
   const [winRate, setWinRate] = useState(initial?.win_rate || "");
-  const [average, setAverage] = useState(initial?.average || "");
   const [points, setPoints] = useState((initial?.points || []).join(", "));
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -611,9 +603,7 @@ function MonthlyResultDialog({
       const payload = {
         period: period.trim(),
         return_rate: returnRate.trim(),
-        trade_count: Number(tradeCount),
         win_rate: winRate.trim(),
-        average: average.trim(),
         points,
       };
       const res = await fetch(
@@ -671,41 +661,21 @@ function MonthlyResultDialog({
               className={dInput}
             />
           </DField>
-          <DField label="수익률" hint="예: +18.6%">
+          <DField label="한달 수익률" hint="예: +68.4%">
             <input
               required
               value={returnRate}
               onChange={(e) => setReturnRate(e.target.value)}
-              placeholder="+18.6%"
+              placeholder="+68.4%"
               className={dInput}
             />
           </DField>
-          <DField label="매매 횟수" hint="정수 (회)">
-            <input
-              required
-              type="number"
-              min={0}
-              value={tradeCount}
-              onChange={(e) => setTradeCount(e.target.value)}
-              placeholder="24"
-              className={dInput}
-            />
-          </DField>
-          <DField label="승률" hint="예: 79%">
+          <DField label="승률" hint="예: 87%" className="md:col-span-2">
             <input
               required
               value={winRate}
               onChange={(e) => setWinRate(e.target.value)}
-              placeholder="79%"
-              className={dInput}
-            />
-          </DField>
-          <DField label="평균 수익" hint="예: +2.3%" className="md:col-span-2">
-            <input
-              required
-              value={average}
-              onChange={(e) => setAverage(e.target.value)}
-              placeholder="+2.3%"
+              placeholder="87%"
               className={dInput}
             />
           </DField>
