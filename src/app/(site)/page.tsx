@@ -7,6 +7,9 @@ import TickerTape from "@/components/TickerTape";
 import Sparkline from "@/components/Sparkline";
 import OrbitalAccent from "@/components/OrbitalAccent";
 import CandlestickField from "@/components/CandlestickField";
+import { fetchMonthlyResults } from "@/lib/monthly-results";
+
+export const revalidate = 30;
 
 const HIGHLIGHTS = [
   {
@@ -106,15 +109,6 @@ const PROCESS = [
   { n: "STEP 04", t: "실행 & 관리", d: "지속적인 모니터링과 리밸런싱을 진행합니다" },
 ];
 
-const RESULTS = [
-  { p: "2026.04", r: "+18.6%", c: 24, w: "79%", a: "+2.3%", pts: [100, 102, 101, 104, 107, 106, 109, 112, 114, 118, 116, 119] },
-  { p: "2026.03", r: "+22.4%", c: 28, w: "82%", a: "+2.8%", pts: [100, 103, 106, 105, 108, 111, 114, 113, 117, 120, 121, 122] },
-  { p: "2026.02", r: "+15.1%", c: 21, w: "76%", a: "+2.1%", pts: [100, 101, 100, 103, 105, 104, 107, 109, 111, 113, 114, 115] },
-  { p: "2026.01", r: "+19.8%", c: 26, w: "80%", a: "+2.5%", pts: [100, 102, 104, 103, 107, 110, 112, 114, 116, 115, 118, 120] },
-  { p: "2025.12", r: "+12.3%", c: 19, w: "73%", a: "+1.9%", pts: [100, 99, 101, 102, 104, 105, 103, 107, 108, 110, 111, 112] },
-  { p: "2025.11", r: "+24.7%", c: 31, w: "84%", a: "+3.0%", pts: [100, 103, 106, 108, 109, 112, 115, 117, 120, 121, 123, 125] },
-];
-
 const REVIEWS = [
   { n: "김OO", m: "30대 / 직장인", r: "체계적인 시장 분석 덕분에 투자 판단에 자신감이 생겼습니다. 포트폴리오 점검을 통해 기존 문제점을 정확히 파악할 수 있었어요." },
   { n: "이OO", m: "40대 / 자영업", r: "혼자서는 파악하기 어려웠던 시장 흐름을 깊이 있게 분석해 주셔서 큰 도움이 됐습니다. 덕분에 더 나은 투자 결정을 내릴 수 있었어요." },
@@ -131,7 +125,8 @@ const FAQ = [
   { q: "상담은 어떻게 신청하나요?", a: "아래 문의 양식을 통해 신청하시거나, 전화(02-6953-3081)로 문의해 주시면 빠르게 안내드리겠습니다." },
 ];
 
-export default function Home() {
+export default async function Home() {
+  const RESULTS = await fetchMonthlyResults();
   return (
     <>
       {/* HERO */}
@@ -557,21 +552,21 @@ export default function Home() {
                 </thead>
                 <tbody className="divide-y divide-white/5">
                   {RESULTS.map((row) => (
-                    <tr key={row.p} className="hover:bg-gold-500/5 transition">
-                      <td className="px-6 py-5 font-medium text-white font-display">{row.p}</td>
+                    <tr key={row.period} className="hover:bg-gold-500/5 transition">
+                      <td className="px-6 py-5 font-medium text-white font-display">{row.period}</td>
                       <td className="px-6 py-5">
                         <span className="inline-flex items-center gap-1 rounded-full bg-rose-500/15 border border-rose-400/30 px-3 py-1 text-sm font-semibold text-rose-300">
                           <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
                             <path d="M5 15l7-7 7 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
-                          {row.r}
+                          {row.return_rate}
                         </span>
                       </td>
-                      <td className="px-6 py-5 text-slate-300">{row.c}회</td>
-                      <td className="px-6 py-5 text-slate-300 font-medium">{row.w}</td>
-                      <td className="px-6 py-5 text-gold-300 font-semibold">{row.a}</td>
+                      <td className="px-6 py-5 text-slate-300">{row.trade_count}회</td>
+                      <td className="px-6 py-5 text-slate-300 font-medium">{row.win_rate}</td>
+                      <td className="px-6 py-5 text-gold-300 font-semibold">{row.average}</td>
                       <td className="px-6 py-5">
-                        <Sparkline points={row.pts} up width={110} height={32} />
+                        <Sparkline points={row.points} up width={110} height={32} />
                       </td>
                     </tr>
                   ))}

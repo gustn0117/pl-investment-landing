@@ -23,7 +23,19 @@ type Lead = {
   created_at: string;
 };
 
-type Tab = "inquiries" | "leads";
+type MonthlyResult = {
+  id: number;
+  period: string;
+  return_rate: string;
+  trade_count: number;
+  win_rate: string;
+  average: string;
+  points: number[];
+  created_at: string;
+  updated_at: string;
+};
+
+type Tab = "inquiries" | "leads" | "results";
 const STATUSES: Array<Inquiry["status"]> = ["new", "read", "done"];
 const STATUS_LABEL: Record<Inquiry["status"], string> = {
   new: "신규",
@@ -138,18 +150,21 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
   const [tab, setTab] = useState<Tab>("inquiries");
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [leads, setLeads] = useState<Lead[]>([]);
+  const [results, setResults] = useState<MonthlyResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [expanded, setExpanded] = useState<number | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const [i, l] = await Promise.all([
+      const [i, l, r] = await Promise.all([
         fetch("/api/admin/inquiries", { cache: "no-store" }),
         fetch("/api/admin/leads", { cache: "no-store" }),
+        fetch("/api/admin/monthly-results", { cache: "no-store" }),
       ]);
       if (i.ok) setInquiries((await i.json()).data || []);
       if (l.ok) setLeads((await l.json()).data || []);
+      if (r.ok) setResults((await r.json()).data || []);
     } finally {
       setLoading(false);
     }
@@ -159,7 +174,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
     load();
   }, [load]);
 
-  async function updateStatus(table: Tab, id: number, status: Inquiry["status"]) {
+  async function updateStatus(table: "inquiries" | "leads", id: number, status: Inquiry["status"]) {
     const res = await fetch(`/api/admin/${table}/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -174,12 +189,13 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
     }
   }
 
-  async function remove(table: Tab, id: number) {
+  async function remove(table: "inquiries" | "leads" | "monthly-results", id: number) {
     if (!confirm("정말 삭제하시겠습니까?")) return;
     const res = await fetch(`/api/admin/${table}/${id}`, { method: "DELETE" });
     if (res.ok) {
       if (table === "inquiries") setInquiries((arr) => arr.filter((x) => x.id !== id));
-      else setLeads((arr) => arr.filter((x) => x.id !== id));
+      else if (table === "leads") setLeads((arr) => arr.filter((x) => x.id !== id));
+      else setResults((arr) => arr.filter((x) => x.id !== id));
     }
   }
 
@@ -188,7 +204,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
     onLogout();
   }
 
-  const tabCount = { inquiries: inquiries.length, leads: leads.length };
+  const tabCount = { inquiries: inquiries.length, leads: leads.length, results: results.length };
   const newCount = {
     inquiries: inquiries.filter((x) => x.status === "new").length,
     leads: leads.filter((x) => x.status === "new").length,
@@ -196,7 +212,6 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
 
   return (
     <div className="min-h-screen">
-      {/* Top bar */}
       <header className="sticky top-0 z-10 border-b border-white/10 bg-ink-950/85 backdrop-blur-xl">
         <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -221,25 +236,28 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
             </button>
           </div>
         </div>
-        {/* Tabs */}
-        <div className="mx-auto max-w-7xl px-6 flex gap-6">
-          {(["inquiries", "leads"] as Tab[]).map((t) => {
-            const active = tab === t;
-            const label = t === "inquiries" ? "문의하기" : "빠른 신청";
+        <div className="mx-auto max-w-7xl px-6 flex gap-6 overflow-x-auto">
+          {([
+            { key: "inquiries" as Tab, label: "문의하기" },
+            { key: "leads" as Tab, label: "빠른 신청" },
+            { key: "results" as Tab, label: "월별 수익" },
+          ]).map((t) => {
+            const active = tab === t.key;
+            const n = t.key === "inquiries" ? newCount.inquiries : t.key === "leads" ? newCount.leads : 0;
             return (
               <button
-                key={t}
-                onClick={() => setTab(t)}
-                className={`relative py-3 text-sm font-medium transition ${
+                key={t.key}
+                onClick={() => setTab(t.key)}
+                className={`relative py-3 text-sm font-medium transition whitespace-nowrap ${
                   active ? "text-gold-300" : "text-slate-400 hover:text-white"
                 }`}
               >
-                <span>{label}</span>
+                <span>{t.label}</span>
                 <span className="ml-2 text-xs text-slate-500">
-                  {tabCount[t]}
-                  {newCount[t] > 0 && (
+                  {tabCount[t.key]}
+                  {n > 0 && (
                     <span className="ml-1 inline-flex items-center justify-center rounded-full bg-rose-500/20 text-rose-300 px-1.5 py-0.5 text-[10px] font-semibold">
-                      신규 {newCount[t]}
+                      신규 {n}
                     </span>
                   )}
                 </span>
@@ -270,6 +288,13 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
             rows={leads}
             onStatus={(id, s) => updateStatus("leads", id, s)}
             onDelete={(id) => remove("leads", id)}
+          />
+        )}
+        {!loading && tab === "results" && (
+          <MonthlyResultsTable
+            rows={results}
+            onReload={load}
+            onDelete={(id) => remove("monthly-results", id)}
           />
         )}
       </main>
@@ -339,7 +364,7 @@ function InquiryTable({
           </thead>
           <tbody className="divide-y divide-white/5">
             {rows.map((r) => (
-              <Row key={r.id} r={r} expanded={expanded === r.id} onToggle={() => onToggle(r.id)} onStatus={(s) => onStatus(r.id, s)} onDelete={() => onDelete(r.id)} />
+              <InquiryRow key={r.id} r={r} expanded={expanded === r.id} onToggle={() => onToggle(r.id)} onStatus={(s) => onStatus(r.id, s)} onDelete={() => onDelete(r.id)} />
             ))}
           </tbody>
         </table>
@@ -348,7 +373,7 @@ function InquiryTable({
   );
 }
 
-function Row({
+function InquiryRow({
   r,
   expanded,
   onToggle,
@@ -393,7 +418,7 @@ function Row({
       {expanded && (
         <tr className="bg-ink-900/60">
           <td colSpan={8} className="px-4 py-4">
-            <div className="rounded-lg border border-white/8 bg-ink-950/70 p-4 text-sm leading-relaxed text-slate-200 whitespace-pre-wrap">
+            <div className="rounded-lg border border-white/10 bg-ink-950/70 p-4 text-sm leading-relaxed text-slate-200 whitespace-pre-wrap">
               {r.message}
             </div>
           </td>
@@ -459,6 +484,289 @@ function LeadTable({
         </table>
       </div>
     </div>
+  );
+}
+
+function MonthlyResultsTable({
+  rows,
+  onReload,
+  onDelete,
+}: {
+  rows: MonthlyResult[];
+  onReload: () => void;
+  onDelete: (id: number) => void;
+}) {
+  const [editing, setEditing] = useState<MonthlyResult | null>(null);
+  const [adding, setAdding] = useState(false);
+
+  return (
+    <div>
+      <div className="mb-4 flex items-center justify-between">
+        <p className="text-xs text-slate-500">
+          · 월별 수익 내역 — 홈페이지 &quot;월별 수익&quot; 섹션에 바로 반영됩니다 (최대 30초 캐시)
+        </p>
+        <button
+          onClick={() => setAdding(true)}
+          className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-gold-500 to-gold-300 px-4 py-2 text-sm font-semibold text-ink-950 shadow-gold-soft hover:shadow-gold-glow transition"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+          </svg>
+          새 월 추가
+        </button>
+      </div>
+
+      {!rows.length ? (
+        <EmptyState label="등록된 월별 수익이 없습니다." />
+      ) : (
+        <div className="overflow-hidden rounded-2xl border border-white/10 bg-ink-800/40 backdrop-blur-sm shadow-dark-panel">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-ink-900/80 text-slate-400 text-left">
+                <tr>
+                  <th className="px-4 py-3 font-medium">기간</th>
+                  <th className="px-4 py-3 font-medium">수익률</th>
+                  <th className="px-4 py-3 font-medium">매매 횟수</th>
+                  <th className="px-4 py-3 font-medium">승률</th>
+                  <th className="px-4 py-3 font-medium">평균</th>
+                  <th className="px-4 py-3 font-medium">추이(포인트 수)</th>
+                  <th className="px-4 py-3 font-medium">수정일</th>
+                  <th className="px-4 py-3 font-medium">관리</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {rows.map((r) => (
+                  <tr key={r.id} className="hover:bg-white/[0.02] transition">
+                    <td className="px-4 py-3 text-white font-medium font-display tabular-nums">{r.period}</td>
+                    <td className="px-4 py-3 text-rose-300 font-semibold tabular-nums">{r.return_rate}</td>
+                    <td className="px-4 py-3 text-slate-300 tabular-nums">{r.trade_count}회</td>
+                    <td className="px-4 py-3 text-slate-300 tabular-nums">{r.win_rate}</td>
+                    <td className="px-4 py-3 text-gold-300 font-semibold tabular-nums">{r.average}</td>
+                    <td className="px-4 py-3 text-slate-400 tabular-nums">{r.points.length}개</td>
+                    <td className="px-4 py-3 text-slate-500 whitespace-nowrap tabular-nums text-xs">{fmtDate(r.updated_at)}</td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <button
+                        onClick={() => setEditing(r)}
+                        className="text-xs text-gold-300 hover:text-gold-200 transition mr-3"
+                      >
+                        수정
+                      </button>
+                      <button
+                        onClick={() => onDelete(r.id)}
+                        className="text-xs text-slate-500 hover:text-rose-400 transition"
+                      >
+                        삭제
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {(adding || editing) && (
+        <MonthlyResultDialog
+          initial={editing}
+          onClose={() => {
+            setAdding(false);
+            setEditing(null);
+          }}
+          onSaved={() => {
+            setAdding(false);
+            setEditing(null);
+            onReload();
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
+function MonthlyResultDialog({
+  initial,
+  onClose,
+  onSaved,
+}: {
+  initial: MonthlyResult | null;
+  onClose: () => void;
+  onSaved: () => void;
+}) {
+  const isEdit = Boolean(initial);
+  const [period, setPeriod] = useState(initial?.period || "");
+  const [returnRate, setReturnRate] = useState(initial?.return_rate || "+0.0%");
+  const [tradeCount, setTradeCount] = useState(String(initial?.trade_count ?? ""));
+  const [winRate, setWinRate] = useState(initial?.win_rate || "");
+  const [average, setAverage] = useState(initial?.average || "");
+  const [points, setPoints] = useState((initial?.points || []).join(", "));
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function save(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setSaving(true);
+    try {
+      const payload = {
+        period: period.trim(),
+        return_rate: returnRate.trim(),
+        trade_count: Number(tradeCount),
+        win_rate: winRate.trim(),
+        average: average.trim(),
+        points,
+      };
+      const res = await fetch(
+        isEdit ? `/api/admin/monthly-results/${initial!.id}` : "/api/admin/monthly-results",
+        {
+          method: isEdit ? "PATCH" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
+      const j = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(j.error || "저장 실패");
+        return;
+      }
+      onSaved();
+    } catch {
+      setError("네트워크 오류");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink-950/80 backdrop-blur">
+      <form
+        onSubmit={save}
+        className="relative w-full max-w-lg rounded-2xl border border-white/10 bg-ink-900 p-6 shadow-2xl"
+      >
+        <div
+          className="absolute inset-x-0 top-0 h-px"
+          style={{
+            background:
+              "linear-gradient(90deg, transparent, rgba(223,189,106,0.6), transparent)",
+          }}
+        />
+        <div className="flex items-center justify-between">
+          <h3 className="font-display text-lg font-medium text-white">
+            {isEdit ? "월별 수익 수정" : "새 월별 수익 추가"}
+          </h3>
+          <button type="button" onClick={onClose} className="text-slate-500 hover:text-white transition" aria-label="닫기">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M6 6l12 12M6 18L18 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+          </button>
+        </div>
+
+        <div className="mt-5 grid gap-4 md:grid-cols-2">
+          <DField label="기간" hint="예: 2026.04">
+            <input
+              required
+              value={period}
+              onChange={(e) => setPeriod(e.target.value)}
+              placeholder="2026.04"
+              className={dInput}
+            />
+          </DField>
+          <DField label="수익률" hint="예: +18.6%">
+            <input
+              required
+              value={returnRate}
+              onChange={(e) => setReturnRate(e.target.value)}
+              placeholder="+18.6%"
+              className={dInput}
+            />
+          </DField>
+          <DField label="매매 횟수" hint="정수 (회)">
+            <input
+              required
+              type="number"
+              min={0}
+              value={tradeCount}
+              onChange={(e) => setTradeCount(e.target.value)}
+              placeholder="24"
+              className={dInput}
+            />
+          </DField>
+          <DField label="승률" hint="예: 79%">
+            <input
+              required
+              value={winRate}
+              onChange={(e) => setWinRate(e.target.value)}
+              placeholder="79%"
+              className={dInput}
+            />
+          </DField>
+          <DField label="평균 수익" hint="예: +2.3%" className="md:col-span-2">
+            <input
+              required
+              value={average}
+              onChange={(e) => setAverage(e.target.value)}
+              placeholder="+2.3%"
+              className={dInput}
+            />
+          </DField>
+          <DField label="추이 포인트" hint="쉼표로 구분된 숫자 2개 이상 (예: 100, 102, 105, 108)" className="md:col-span-2">
+            <input
+              required
+              value={points}
+              onChange={(e) => setPoints(e.target.value)}
+              placeholder="100, 102, 105, 108, 112, 115, 119"
+              className={dInput + " tabular-nums"}
+            />
+          </DField>
+        </div>
+
+        {error && (
+          <div className="mt-4 rounded-lg border border-rose-400/40 bg-rose-500/10 px-3 py-2 text-xs text-rose-300">
+            {error}
+          </div>
+        )}
+
+        <div className="mt-6 flex items-center justify-end gap-2">
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-full border border-white/10 px-4 py-2 text-sm text-slate-300 hover:border-white/25 hover:text-white transition"
+          >
+            취소
+          </button>
+          <button
+            type="submit"
+            disabled={saving}
+            className="btn-primary disabled:opacity-60"
+          >
+            {saving ? "저장 중..." : isEdit ? "수정 저장" : "추가"}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+const dInput =
+  "w-full rounded-xl border border-white/10 bg-ink-900/70 px-4 py-2.5 text-sm text-white placeholder:text-slate-500 focus:border-gold-400/60 focus:ring-2 focus:ring-gold-400/20 outline-none transition";
+
+function DField({
+  label,
+  hint,
+  children,
+  className = "",
+}: {
+  label: string;
+  hint?: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <label className={`block ${className}`}>
+      <span className="block text-xs font-medium text-slate-300">{label}</span>
+      <div className="mt-1.5">{children}</div>
+      {hint && <span className="mt-1 block text-[11px] text-slate-500">{hint}</span>}
+    </label>
   );
 }
 
