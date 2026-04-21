@@ -5,7 +5,7 @@ import StickyBottomCTA from "@/components/StickyBottomCTA";
 
 export default function SiteLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="pb-[156px] md:pb-[120px]">
+    <div className="pb-[300px] sm:pb-[200px] md:pb-[210px]">
       <SmoothAnchors />
       <Header />
       <main>{children}</main>

@@ -49,14 +49,14 @@ export default function StickyBottomCTA() {
 
   if (submitted) {
     return (
-      <div className="fixed bottom-0 inset-x-0 z-40 bg-gradient-to-b from-ink-900/95 to-ink-950/95 backdrop-blur-xl border-t border-gold-400/40 shadow-[0_-20px_60px_-20px_rgba(0,0,0,0.7)]">
-        <div className="container-x py-4 md:py-5 flex items-center justify-center gap-3">
-          <span className="grid place-items-center h-7 w-7 rounded-full bg-gradient-to-br from-gold-400 to-gold-600 text-ink-950 shrink-0">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+      <div className="fixed bottom-0 inset-x-0 z-40 bg-gradient-to-b from-gold-600/20 via-ink-900/98 to-ink-950 backdrop-blur-xl border-t-2 border-gold-400/70 shadow-[0_-30px_80px_-20px_rgba(223,189,106,0.5)]">
+        <div className="container-x py-7 md:py-9 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <span className="grid place-items-center h-11 w-11 rounded-full bg-gradient-to-br from-gold-400 to-gold-600 text-ink-950 shrink-0 shadow-gold-glow">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
               <path d="M5 12l5 5L20 7" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </span>
-          <span className="text-sm md:text-base font-medium text-white">
+          <span className="text-base md:text-lg font-medium text-white text-center">
             신청이 접수되었습니다. 빠른 시일 내에 담당자가 연락드리겠습니다.
           </span>
           <button
@@ -67,7 +67,7 @@ export default function StickyBottomCTA() {
               setPhone("");
               setConsent({ privacy: false, marketing: false });
             }}
-            className="ml-2 rounded-full border border-gold-400/50 px-4 py-1.5 text-xs font-medium text-gold-300 hover:bg-gold-400/10 transition"
+            className="rounded-full border border-gold-400/60 px-5 py-2.5 text-sm font-medium text-gold-300 hover:bg-gold-400/10 hover:border-gold-300 transition"
           >
             새로 신청
           </button>
@@ -77,20 +77,26 @@ export default function StickyBottomCTA() {
   }
 
   return (
-    <div className="fixed bottom-0 inset-x-0 z-40 bg-gradient-to-b from-ink-900/95 to-ink-950/98 backdrop-blur-xl border-t border-gold-400/25 shadow-[0_-20px_60px_-20px_rgba(0,0,0,0.7)]">
+    <div className="fixed bottom-0 inset-x-0 z-40 bg-gradient-to-b from-gold-600/20 via-ink-900/98 to-ink-950 backdrop-blur-xl border-t-2 border-gold-400/60 shadow-[0_-30px_80px_-25px_rgba(223,189,106,0.45),0_-8px_40px_-10px_rgba(0,0,0,0.9)]">
+      {/* shimmer top accent */}
+      <div className="absolute inset-x-0 -top-[1px] h-[3px] overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gold-300 to-transparent animate-shimmer" />
+      </div>
+      {/* ambient gold glow overlay */}
       <div
-        className="absolute inset-x-0 top-0 h-px"
+        className="absolute inset-0 pointer-events-none opacity-80"
         style={{
           background:
-            "linear-gradient(90deg, transparent, rgba(223,189,106,0.7), transparent)",
+            "radial-gradient(ellipse at center top, rgba(223,189,106,0.18), transparent 60%)",
         }}
       />
-      <div className="container-x py-3 md:py-4">
+
+      <div className="relative container-x py-5 md:py-7">
         <form
           onSubmit={onSubmit}
-          className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2 sm:gap-3 max-w-3xl mx-auto"
+          className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 md:gap-4 max-w-4xl mx-auto"
         >
-          <div className="flex flex-1 gap-2 min-w-0">
+          <div className="flex flex-1 gap-3 md:gap-4 min-w-0">
             <input
               required
               type="text"
@@ -98,7 +104,7 @@ export default function StickyBottomCTA() {
               onChange={(e) => setName(e.target.value)}
               placeholder="이름"
               aria-label="이름"
-              className="flex-1 min-w-0 rounded-full bg-ink-800/80 border border-white/10 px-4 py-2.5 text-sm text-white placeholder:text-slate-500 focus:border-gold-400/60 focus:ring-2 focus:ring-gold-400/20 outline-none transition"
+              className="flex-1 min-w-0 rounded-full bg-ink-800/90 border-2 border-gold-500/25 px-5 md:px-6 py-4 md:py-5 text-base md:text-lg text-white placeholder:text-slate-500 focus:border-gold-400/80 focus:ring-4 focus:ring-gold-400/15 outline-none transition"
             />
             <input
               required
@@ -108,56 +114,57 @@ export default function StickyBottomCTA() {
               placeholder="휴대폰 번호"
               aria-label="휴대폰 번호"
               pattern="[0-9\\-\\s]{9,15}"
-              className="flex-1 min-w-0 rounded-full bg-ink-800/80 border border-white/10 px-4 py-2.5 text-sm text-white placeholder:text-slate-500 focus:border-gold-400/60 focus:ring-2 focus:ring-gold-400/20 outline-none transition"
+              className="flex-1 min-w-0 rounded-full bg-ink-800/90 border-2 border-gold-500/25 px-5 md:px-6 py-4 md:py-5 text-base md:text-lg text-white placeholder:text-slate-500 focus:border-gold-400/80 focus:ring-4 focus:ring-gold-400/15 outline-none transition"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="relative inline-flex items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-gold-400 via-gold-300 to-gold-400 px-5 md:px-7 py-2.5 text-sm font-bold text-ink-950 shadow-gold-soft hover:shadow-gold-glow hover:-translate-y-0.5 transition disabled:opacity-60 whitespace-nowrap"
+            className="relative inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-gold-500 via-gold-300 to-gold-500 px-8 md:px-12 py-4 md:py-5 text-base md:text-xl font-bold text-ink-950 shadow-[0_15px_50px_-10px_rgba(223,189,106,0.75),inset_0_1px_0_rgba(255,255,255,0.4)] hover:shadow-[0_15px_70px_-5px_rgba(223,189,106,1),inset_0_1px_0_rgba(255,255,255,0.5)] hover:-translate-y-0.5 transition disabled:opacity-60 whitespace-nowrap tracking-tight"
           >
+            <span className="absolute inset-0 rounded-full ring-2 ring-gold-200/40 pointer-events-none" />
             {loading ? "전송 중..." : "무료 종목 받기"}
             {!loading && (
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             )}
           </button>
         </form>
 
-        <div className="mt-2.5 flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-[11px] md:text-xs text-slate-400">
-          <label className="inline-flex items-center gap-1.5 cursor-pointer hover:text-gold-300 transition">
+        <div className="mt-4 md:mt-5 flex flex-wrap items-center justify-center gap-x-5 md:gap-x-7 gap-y-2 text-xs md:text-sm text-slate-400">
+          <label className="inline-flex items-center gap-2 cursor-pointer hover:text-gold-300 transition">
             <input
               type="checkbox"
               checked={allAgreed}
               onChange={toggleAll}
-              className="h-3.5 w-3.5 rounded border-gold-400/40 bg-ink-800 text-gold-400 focus:ring-gold-400/30 cursor-pointer"
+              className="h-4 w-4 md:h-[18px] md:w-[18px] rounded border-gold-400/50 bg-ink-800 text-gold-400 focus:ring-gold-400/30 cursor-pointer"
             />
-            <span className="text-gold-300 font-medium">모두 동의</span>
+            <span className="text-gold-300 font-semibold">모두 동의</span>
           </label>
 
-          <label className="inline-flex items-center gap-1.5 cursor-pointer hover:text-gold-300 transition">
+          <label className="inline-flex items-center gap-2 cursor-pointer hover:text-gold-300 transition">
             <input
               type="checkbox"
               checked={consent.privacy}
               onChange={(e) => setConsent((c) => ({ ...c, privacy: e.target.checked }))}
-              className="h-3.5 w-3.5 rounded border-gold-400/40 bg-ink-800 text-gold-400 focus:ring-gold-400/30 cursor-pointer"
+              className="h-4 w-4 md:h-[18px] md:w-[18px] rounded border-gold-400/50 bg-ink-800 text-gold-400 focus:ring-gold-400/30 cursor-pointer"
             />
             <span>
-              <span className="text-rose-400">(필수)</span> 개인정보 제3자 제공
+              <span className="text-rose-400 font-medium">(필수)</span> 개인정보 제3자 제공
             </span>
           </label>
 
-          <label className="inline-flex items-center gap-1.5 cursor-pointer hover:text-gold-300 transition">
+          <label className="inline-flex items-center gap-2 cursor-pointer hover:text-gold-300 transition">
             <input
               type="checkbox"
               checked={consent.marketing}
               onChange={(e) => setConsent((c) => ({ ...c, marketing: e.target.checked }))}
-              className="h-3.5 w-3.5 rounded border-gold-400/40 bg-ink-800 text-gold-400 focus:ring-gold-400/30 cursor-pointer"
+              className="h-4 w-4 md:h-[18px] md:w-[18px] rounded border-gold-400/50 bg-ink-800 text-gold-400 focus:ring-gold-400/30 cursor-pointer"
             />
             <span>
-              <span className="text-rose-400">(필수)</span> 광고성 정보수신
+              <span className="text-rose-400 font-medium">(필수)</span> 광고성 정보수신
             </span>
           </label>
         </div>
