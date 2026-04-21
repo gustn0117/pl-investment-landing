@@ -238,7 +238,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-grid opacity-25" />
         <div className="relative container-x py-10 md:py-12 flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12">
           <Image
-            src="/logo/logo-gold-white.png"
+            src="/logo/logo-gold-transparent.png"
             alt="PL Investment"
             width={520}
             height={320}
