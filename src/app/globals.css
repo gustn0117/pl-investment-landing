@@ -1,0 +1,122 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #ffffff;
+  --ink: #07080f;
+  --gold: #bf9140;
+  --gold-light: #dfbd6a;
+  --gold-dark: #85602c;
+}
+
+html, body { background: var(--bg); color: var(--ink); }
+html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
+section[id] { scroll-margin-top: 5rem; }
+
+::selection { background: rgba(191,145,64,0.3); color: #07080f; }
+
+@layer components {
+  .container-x { @apply mx-auto w-full max-w-6xl px-5 md:px-8; }
+  .h-display { @apply text-4xl md:text-6xl font-bold tracking-tight leading-[1.15]; }
+  .h-section { @apply text-3xl md:text-5xl font-bold tracking-tight leading-tight; }
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-[11px] md:text-xs font-semibold tracking-[0.3em] uppercase;
+    color: var(--gold);
+  }
+  .eyebrow::before {
+    content: "";
+    @apply inline-block w-6 h-px bg-current opacity-60;
+  }
+
+  .btn-primary {
+    @apply relative inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-sm md:text-base font-semibold text-ink-900 transition overflow-hidden shadow-gold-soft hover:-translate-y-0.5 hover:shadow-gold-glow;
+    background: linear-gradient(135deg, #ecd69c 0%, #dfbd6a 40%, #bf9140 100%);
+  }
+  .btn-primary::after {
+    content: "";
+    @apply absolute inset-0 opacity-0 transition;
+    background: linear-gradient(135deg, #dfbd6a 0%, #cfa64f 50%, #a77a35 100%);
+  }
+  .btn-primary:hover::after { @apply opacity-100; }
+  .btn-primary > * { @apply relative z-10; }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-gold-400/40 bg-white/5 px-7 py-3.5 text-sm md:text-base font-semibold text-gold-200 backdrop-blur transition hover:bg-gold-400/10 hover:border-gold-300/70 hover:text-gold-100;
+  }
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-gold-500 px-7 py-3.5 text-sm md:text-base font-semibold text-gold-700 transition hover:bg-gold-500 hover:text-white;
+  }
+  .card-soft {
+    @apply relative rounded-2xl border border-slate-200 bg-white p-7 md:p-8 shadow-sm transition hover:shadow-xl hover:-translate-y-1 hover:border-gold-200;
+  }
+  .card-dark {
+    @apply relative rounded-2xl border border-white/10 bg-ink-800/60 backdrop-blur p-7 md:p-8 shadow-lg;
+  }
+
+  .divider-gold {
+    @apply relative inline-flex items-center gap-3;
+  }
+  .divider-gold::before,
+  .divider-gold::after {
+    content: "";
+    @apply block h-px w-10 md:w-16;
+    background: linear-gradient(90deg, transparent, #bf9140, transparent);
+  }
+
+  .text-gold-gradient {
+    background: linear-gradient(135deg, #f5ead0 0%, #dfbd6a 35%, #bf9140 65%, #ecd69c 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+/* Subtle grid background */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(223,189,106,0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(223,189,106,0.08) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.bg-grid-light {
+  background-image:
+    linear-gradient(to right, rgba(191,145,64,0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(191,145,64,0.07) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+/* Animated gradient blob */
+.blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+/* Gold hairline divider */
+.hairline-gold {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(191,145,64,0.6) 50%, transparent 100%);
+}
+
+/* Gold shimmer underline */
+.underline-gold {
+  background-image: linear-gradient(90deg, #bf9140, #dfbd6a);
+  background-size: 100% 2px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+}
+
+/* Noise texture for premium feel */
+.texture-noise::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 3px 3px;
+  mix-blend-mode: overlay;
+}
