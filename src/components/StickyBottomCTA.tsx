@@ -77,21 +77,34 @@ export default function StickyBottomCTA() {
   }
 
   return (
-    <div className="fixed bottom-0 inset-x-0 z-40 bg-gradient-to-b from-gold-600/20 via-ink-900/98 to-ink-950 backdrop-blur-xl border-t-2 border-gold-400/60 shadow-[0_-30px_80px_-25px_rgba(223,189,106,0.45),0_-8px_40px_-10px_rgba(0,0,0,0.9)]">
-      {/* shimmer top accent */}
+    <div className="fixed bottom-0 inset-x-0 z-40 bg-gradient-to-b from-gold-500/22 via-ink-900/98 to-ink-950 backdrop-blur-xl border-t-2 border-gold-400/70 shadow-[0_-28px_90px_-20px_rgba(223,189,106,0.5),0_-8px_40px_-10px_rgba(0,0,0,0.9)]">
+      {/* animated shimmer top accent */}
       <div className="absolute inset-x-0 -top-[1px] h-[3px] overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gold-300 to-transparent animate-shimmer" />
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gold-200 to-transparent animate-shimmer" />
       </div>
       {/* ambient gold glow overlay */}
       <div
         className="absolute inset-0 pointer-events-none opacity-80"
         style={{
           background:
-            "radial-gradient(ellipse at center top, rgba(223,189,106,0.18), transparent 60%)",
+            "radial-gradient(ellipse at center top, rgba(223,189,106,0.22), transparent 60%)",
         }}
       />
 
-      <div className="relative container-x py-5 md:py-7">
+      <div className="relative container-x py-6 md:py-8">
+        {/* emphasis headline badge */}
+        <div className="flex justify-center mb-3 md:mb-4">
+          <div className="inline-flex items-center gap-2 rounded-full border border-gold-300/60 bg-gradient-to-r from-gold-500/18 via-gold-400/12 to-gold-500/18 px-4 md:px-5 py-1.5 md:py-2 shadow-[0_0_24px_-6px_rgba(223,189,106,0.55)]">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inset-0 rounded-full bg-rose-400 animate-ping opacity-75" />
+              <span className="relative rounded-full h-2 w-2 bg-rose-400" />
+            </span>
+            <span className="text-xs md:text-sm font-bold tracking-tight text-gold-200">
+              지금 신청 시 <span className="text-white">무료 VIP 종목</span> 즉시 발송
+            </span>
+          </div>
+        </div>
+
         <form
           onSubmit={onSubmit}
           className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 md:gap-4 max-w-4xl mx-auto"
@@ -104,7 +117,7 @@ export default function StickyBottomCTA() {
               onChange={(e) => setName(e.target.value)}
               placeholder="이름"
               aria-label="이름"
-              className="flex-1 min-w-0 rounded-full bg-ink-800/90 border-2 border-gold-500/25 px-5 md:px-6 py-4 md:py-5 text-base md:text-lg text-white placeholder:text-slate-500 focus:border-gold-400/80 focus:ring-4 focus:ring-gold-400/15 outline-none transition"
+              className="flex-1 min-w-0 rounded-full bg-ink-800/90 border-2 border-gold-500/30 px-5 md:px-6 py-4 md:py-5 text-base md:text-lg text-white placeholder:text-slate-500 focus:border-gold-400 focus:ring-4 focus:ring-gold-400/20 outline-none transition"
             />
             <input
               required
@@ -114,19 +127,19 @@ export default function StickyBottomCTA() {
               placeholder="휴대폰 번호"
               aria-label="휴대폰 번호"
               pattern="[0-9\\-\\s]{9,15}"
-              className="flex-1 min-w-0 rounded-full bg-ink-800/90 border-2 border-gold-500/25 px-5 md:px-6 py-4 md:py-5 text-base md:text-lg text-white placeholder:text-slate-500 focus:border-gold-400/80 focus:ring-4 focus:ring-gold-400/15 outline-none transition"
+              className="flex-1 min-w-0 rounded-full bg-ink-800/90 border-2 border-gold-500/30 px-5 md:px-6 py-4 md:py-5 text-base md:text-lg text-white placeholder:text-slate-500 focus:border-gold-400 focus:ring-4 focus:ring-gold-400/20 outline-none transition"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="relative inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-gold-500 via-gold-300 to-gold-500 px-8 md:px-12 py-4 md:py-5 text-base md:text-xl font-bold text-ink-950 shadow-[0_15px_50px_-10px_rgba(223,189,106,0.75),inset_0_1px_0_rgba(255,255,255,0.4)] hover:shadow-[0_15px_70px_-5px_rgba(223,189,106,1),inset_0_1px_0_rgba(255,255,255,0.5)] hover:-translate-y-0.5 transition disabled:opacity-60 whitespace-nowrap tracking-tight"
+            className="relative inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-gold-500 via-gold-200 to-gold-500 px-8 md:px-12 py-4 md:py-5 text-base md:text-xl font-bold text-ink-950 shadow-[0_15px_55px_-10px_rgba(223,189,106,0.8),inset_0_1px_0_rgba(255,255,255,0.45)] hover:shadow-[0_15px_75px_-5px_rgba(223,189,106,1),inset_0_1px_0_rgba(255,255,255,0.55)] hover:-translate-y-0.5 transition disabled:opacity-60 whitespace-nowrap tracking-tight animate-pulse-soft"
           >
-            <span className="absolute inset-0 rounded-full ring-2 ring-gold-200/40 pointer-events-none" />
-            {loading ? "전송 중..." : "무료 종목 받기"}
+            <span className="absolute inset-0 rounded-full ring-2 ring-gold-100/50 pointer-events-none" />
+            <span className="relative">{loading ? "전송 중..." : "무료 종목 받기"}</span>
             {!loading && (
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <svg className="relative" width="20" height="20" viewBox="0 0 24 24" fill="none">
                 <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             )}
