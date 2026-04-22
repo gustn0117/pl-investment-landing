@@ -63,6 +63,10 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
       }
       update.trade_count = v;
     }
+    if (body.top_pick !== undefined) {
+      const v = sanitize(body.top_pick, 60);
+      update.top_pick = v || null;
+    }
     if (body.points !== undefined) {
       const pts = parsePoints(body.points);
       if (!pts || pts.length < 2) {

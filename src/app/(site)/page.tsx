@@ -3,7 +3,6 @@ import SectionHeader from "@/components/SectionHeader";
 import CTA from "@/components/CTA";
 import InquiryForm from "@/components/InquiryForm";
 import ChartBg from "@/components/ChartBg";
-import Sparkline from "@/components/Sparkline";
 import OrbitalAccent from "@/components/OrbitalAccent";
 import CandlestickField from "@/components/CandlestickField";
 import { fetchMonthlyResults } from "@/lib/monthly-results";
@@ -220,7 +219,7 @@ export default async function Home() {
               <table className="w-full text-sm md:text-base">
                 <thead className="bg-gradient-to-r from-ink-800 via-ink-700 to-ink-800 text-white relative">
                   <tr>
-                    {["기간", "한달 누적 수익률", "승률", "추이"].map((h) => (
+                    {["기간", "한달 누적 수익률", "승률", "대표 수익 종목"].map((h) => (
                       <th key={h} className="px-6 py-5 text-left font-medium tracking-wide border-b border-gold-500/20">
                         <span className="text-gold-300 font-display tracking-[0.15em] text-xs mr-2">·</span>
                         {h}
@@ -242,7 +241,14 @@ export default async function Home() {
                       </td>
                       <td className="px-6 py-5 text-slate-300 font-medium tabular-nums">{row.win_rate}</td>
                       <td className="px-6 py-5">
-                        <Sparkline points={row.points} up width={130} height={36} />
+                        {row.top_pick ? (
+                          <span className="inline-flex items-center gap-2 rounded-full bg-gold-500/10 border border-gold-400/30 px-3.5 py-1.5 text-sm font-semibold text-gold-200">
+                            <span className="h-1.5 w-1.5 rounded-full bg-gold-400" />
+                            {row.top_pick}
+                          </span>
+                        ) : (
+                          <span className="text-slate-500 text-sm">—</span>
+                        )}
                       </td>
                     </tr>
                   ))}

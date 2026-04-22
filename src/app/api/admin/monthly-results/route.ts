@@ -44,16 +44,16 @@ export async function POST(req: Request) {
     const period = sanitize(body.period, 20);
     const return_rate = sanitize(body.return_rate, 20);
     const win_rate = sanitize(body.win_rate, 20);
+    const top_pick = sanitize(body.top_pick, 60);
     const points = parsePoints(body.points);
 
     if (!period || !return_rate || !win_rate) {
       return NextResponse.json({ error: "필수 항목 누락" }, { status: 400 });
     }
-    if (!points || points.length < 2) {
-      return NextResponse.json({ error: "추이 포인트는 2개 이상" }, { status: 400 });
-    }
 
-    const row: Record<string, unknown> = { period, return_rate, win_rate, points };
+    const row: Record<string, unknown> = { period, return_rate, win_rate };
+    row.top_pick = top_pick || null;
+    if (points && points.length >= 2) row.points = points;
     if (body.trade_count !== undefined) {
       const n = Number.parseInt(String(body.trade_count), 10);
       if (Number.isInteger(n) && n >= 0) row.trade_count = n;

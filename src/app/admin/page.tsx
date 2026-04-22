@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 type Inquiry = {
   id: number;
@@ -28,7 +28,7 @@ type MonthlyResult = {
   period: string;
   return_rate: string;
   win_rate: string;
-  points: number[];
+  top_pick: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -44,6 +44,43 @@ const STATUS_LABEL: Record<Inquiry["status"], string> = {
 function fmtDate(iso: string) {
   const d = new Date(iso);
   return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")} ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+}
+
+function fileTimestamp() {
+  const d = new Date();
+  return `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, "0")}${String(d.getDate()).padStart(2, "0")}_${String(d.getHours()).padStart(2, "0")}${String(d.getMinutes()).padStart(2, "0")}`;
+}
+
+function csvCell(v: unknown) {
+  const s = v == null ? "" : String(v);
+  return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+}
+
+const CSV_BOM = String.fromCharCode(0xfeff);
+
+function toCsv(headers: string[], rows: (string | number | null | undefined)[][]) {
+  const head = headers.map(csvCell).join(",");
+  const body = rows.map((row) => row.map(csvCell).join(",")).join("\r\n");
+  return `${CSV_BOM}${head}\r\n${body}`;
+}
+
+function downloadCsv(filename: string, content: string) {
+  const blob = new Blob([content], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+type DateRange = "all" | "7d" | "30d" | "90d";
+function withinRange(iso: string, range: DateRange) {
+  if (range === "all") return true;
+  const days = range === "7d" ? 7 : range === "30d" ? 30 : 90;
+  return Date.now() - new Date(iso).getTime() <= days * 24 * 60 * 60 * 1000;
 }
 
 export default function AdminPage() {
@@ -341,32 +378,177 @@ function InquiryTable({
   onStatus: (id: number, s: Inquiry["status"]) => void;
   onDelete: (id: number) => void;
 }) {
-  if (!rows.length) {
-    return <EmptyState label="문의가 없습니다." />;
+  const [query, setQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"all" | Inquiry["status"]>("all");
+  const [typeFilter, setTypeFilter] = useState<string>("all");
+  const [range, setRange] = useState<DateRange>("all");
+
+  const types = useMemo(() => {
+    const set = new Set<string>();
+    rows.forEach((r) => r.type && set.add(r.type));
+    return Array.from(set).sort();
+  }, [rows]);
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return rows.filter((r) => {
+      if (statusFilter !== "all" && r.status !== statusFilter) return false;
+      if (typeFilter !== "all" && r.type !== typeFilter) return false;
+      if (!withinRange(r.created_at, range)) return false;
+      if (!q) return true;
+      return (
+        r.name.toLowerCase().includes(q) ||
+        r.phone.toLowerCase().includes(q) ||
+        (r.email ?? "").toLowerCase().includes(q) ||
+        r.type.toLowerCase().includes(q) ||
+        r.message.toLowerCase().includes(q)
+      );
+    });
+  }, [rows, query, statusFilter, typeFilter, range]);
+
+  const stats = useMemo(
+    () => ({
+      total: rows.length,
+      new: rows.filter((x) => x.status === "new").length,
+      read: rows.filter((x) => x.status === "read").length,
+      done: rows.filter((x) => x.status === "done").length,
+    }),
+    [rows]
+  );
+
+  function exportCsv() {
+    const headers = ["접수일시", "이름", "연락처", "이메일", "유형", "내용", "상태"];
+    const body = filtered.map((r) => [
+      fmtDate(r.created_at),
+      r.name,
+      r.phone,
+      r.email ?? "",
+      r.type,
+      r.message,
+      STATUS_LABEL[r.status],
+    ]);
+    downloadCsv(`inquiries_${fileTimestamp()}.csv`, toCsv(headers, body));
   }
+
+  function resetFilters() {
+    setQuery("");
+    setStatusFilter("all");
+    setTypeFilter("all");
+    setRange("all");
+  }
+
+  const anyFilter =
+    query.trim() !== "" || statusFilter !== "all" || typeFilter !== "all" || range !== "all";
+
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/10 bg-ink-800/40 backdrop-blur-sm shadow-dark-panel">
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead className="bg-ink-900/80 text-slate-400 text-left">
-            <tr>
-              <th className="px-4 py-3 font-medium">접수일시</th>
-              <th className="px-4 py-3 font-medium">이름</th>
-              <th className="px-4 py-3 font-medium">연락처</th>
-              <th className="px-4 py-3 font-medium">이메일</th>
-              <th className="px-4 py-3 font-medium">유형</th>
-              <th className="px-4 py-3 font-medium">내용</th>
-              <th className="px-4 py-3 font-medium">상태</th>
-              <th className="px-4 py-3 font-medium">관리</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-white/5">
-            {rows.map((r) => (
-              <InquiryRow key={r.id} r={r} expanded={expanded === r.id} onToggle={() => onToggle(r.id)} onStatus={(s) => onStatus(r.id, s)} onDelete={() => onDelete(r.id)} />
-            ))}
-          </tbody>
-        </table>
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <StatCard label="전체" value={stats.total} />
+        <StatCard label="신규" value={stats.new} tone="rose" />
+        <StatCard label="확인" value={stats.read} tone="amber" />
+        <StatCard label="완료" value={stats.done} tone="emerald" />
       </div>
+
+      <div className="rounded-2xl border border-white/10 bg-ink-800/40 backdrop-blur-sm p-4 shadow-dark-panel">
+        <div className="flex flex-col lg:flex-row gap-3 lg:items-center">
+          <div className="flex-1 min-w-0">
+            <label className="relative block">
+              <span className="sr-only">검색</span>
+              <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
+                <path d="M21 21l-4.3-4.3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              </svg>
+              <input
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="이름, 연락처, 이메일, 내용 검색"
+                className="w-full rounded-xl border border-white/10 bg-ink-900/70 pl-9 pr-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-gold-400/60 focus:ring-2 focus:ring-gold-400/20 outline-none transition"
+              />
+            </label>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <FilterSelect value={statusFilter} onChange={(v) => setStatusFilter(v as "all" | Inquiry["status"])}>
+              <option value="all">상태 전체</option>
+              <option value="new">신규</option>
+              <option value="read">확인</option>
+              <option value="done">완료</option>
+            </FilterSelect>
+            <FilterSelect value={typeFilter} onChange={setTypeFilter}>
+              <option value="all">유형 전체</option>
+              {types.map((t) => (
+                <option key={t} value={t}>
+                  {t}
+                </option>
+              ))}
+            </FilterSelect>
+            <FilterSelect value={range} onChange={(v) => setRange(v as DateRange)}>
+              <option value="all">기간 전체</option>
+              <option value="7d">최근 7일</option>
+              <option value="30d">최근 30일</option>
+              <option value="90d">최근 90일</option>
+            </FilterSelect>
+            {anyFilter && (
+              <button
+                onClick={resetFilters}
+                className="rounded-full border border-white/10 px-3 py-1.5 text-xs font-medium text-slate-300 hover:border-white/25 hover:text-white transition"
+              >
+                초기화
+              </button>
+            )}
+          </div>
+          <button
+            onClick={exportCsv}
+            disabled={!filtered.length}
+            className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-gold-500 to-gold-300 px-4 py-2 text-sm font-semibold text-ink-950 shadow-gold-soft hover:shadow-gold-glow transition disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            CSV 다운로드
+          </button>
+        </div>
+        <div className="mt-3 text-xs text-slate-500">
+          {filtered.length === rows.length
+            ? `전체 ${rows.length}건`
+            : `${filtered.length}건 / 전체 ${rows.length}건`}
+        </div>
+      </div>
+
+      {!filtered.length ? (
+        <EmptyState label={rows.length ? "조건에 맞는 문의가 없습니다." : "문의가 없습니다."} />
+      ) : (
+        <div className="overflow-hidden rounded-2xl border border-white/10 bg-ink-800/40 backdrop-blur-sm shadow-dark-panel">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-ink-900/80 text-slate-400 text-left">
+                <tr>
+                  <th className="px-4 py-3 font-medium">접수일시</th>
+                  <th className="px-4 py-3 font-medium">이름</th>
+                  <th className="px-4 py-3 font-medium">연락처</th>
+                  <th className="px-4 py-3 font-medium">이메일</th>
+                  <th className="px-4 py-3 font-medium">유형</th>
+                  <th className="px-4 py-3 font-medium">내용</th>
+                  <th className="px-4 py-3 font-medium">상태</th>
+                  <th className="px-4 py-3 font-medium">관리</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {filtered.map((r) => (
+                  <InquiryRow
+                    key={r.id}
+                    r={r}
+                    expanded={expanded === r.id}
+                    onToggle={() => onToggle(r.id)}
+                    onStatus={(s) => onStatus(r.id, s)}
+                    onDelete={() => onDelete(r.id)}
+                  />
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -435,52 +617,167 @@ function LeadTable({
   onStatus: (id: number, s: Inquiry["status"]) => void;
   onDelete: (id: number) => void;
 }) {
-  if (!rows.length) return <EmptyState label="빠른 신청이 없습니다." />;
+  const [query, setQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"all" | Inquiry["status"]>("all");
+  const [range, setRange] = useState<DateRange>("all");
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return rows.filter((r) => {
+      if (statusFilter !== "all" && r.status !== statusFilter) return false;
+      if (!withinRange(r.created_at, range)) return false;
+      if (!q) return true;
+      return r.name.toLowerCase().includes(q) || r.phone.toLowerCase().includes(q);
+    });
+  }, [rows, query, statusFilter, range]);
+
+  const stats = useMemo(
+    () => ({
+      total: rows.length,
+      new: rows.filter((x) => x.status === "new").length,
+      read: rows.filter((x) => x.status === "read").length,
+      done: rows.filter((x) => x.status === "done").length,
+    }),
+    [rows]
+  );
+
+  function exportCsv() {
+    const headers = ["접수일시", "이름", "연락처", "개인정보 동의", "광고 수신 동의", "상태"];
+    const body = filtered.map((r) => [
+      fmtDate(r.created_at),
+      r.name,
+      r.phone,
+      r.consent_privacy ? "Y" : "N",
+      r.consent_marketing ? "Y" : "N",
+      STATUS_LABEL[r.status],
+    ]);
+    downloadCsv(`leads_${fileTimestamp()}.csv`, toCsv(headers, body));
+  }
+
+  function resetFilters() {
+    setQuery("");
+    setStatusFilter("all");
+    setRange("all");
+  }
+
+  const anyFilter = query.trim() !== "" || statusFilter !== "all" || range !== "all";
+
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/10 bg-ink-800/40 backdrop-blur-sm shadow-dark-panel">
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead className="bg-ink-900/80 text-slate-400 text-left">
-            <tr>
-              <th className="px-4 py-3 font-medium">접수일시</th>
-              <th className="px-4 py-3 font-medium">이름</th>
-              <th className="px-4 py-3 font-medium">연락처</th>
-              <th className="px-4 py-3 font-medium">개인정보</th>
-              <th className="px-4 py-3 font-medium">광고수신</th>
-              <th className="px-4 py-3 font-medium">상태</th>
-              <th className="px-4 py-3 font-medium">관리</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-white/5">
-            {rows.map((r) => (
-              <tr key={r.id} className="hover:bg-white/[0.02] transition">
-                <td className="px-4 py-3 text-slate-400 whitespace-nowrap tabular-nums">{fmtDate(r.created_at)}</td>
-                <td className="px-4 py-3 text-white font-medium whitespace-nowrap">{r.name}</td>
-                <td className="px-4 py-3 text-slate-300 whitespace-nowrap tabular-nums">
-                  <a href={`tel:${r.phone}`} className="hover:text-gold-300 transition">{r.phone}</a>
-                </td>
-                <td className="px-4 py-3 text-center">
-                  <Dot on={r.consent_privacy} />
-                </td>
-                <td className="px-4 py-3 text-center">
-                  <Dot on={r.consent_marketing} />
-                </td>
-                <td className="px-4 py-3">
-                  <StatusSelect value={r.status} onChange={(s) => onStatus(r.id, s)} />
-                </td>
-                <td className="px-4 py-3">
-                  <button
-                    onClick={() => onDelete(r.id)}
-                    className="text-xs text-slate-500 hover:text-rose-400 transition"
-                  >
-                    삭제
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <StatCard label="전체" value={stats.total} />
+        <StatCard label="신규" value={stats.new} tone="rose" />
+        <StatCard label="확인" value={stats.read} tone="amber" />
+        <StatCard label="완료" value={stats.done} tone="emerald" />
       </div>
+
+      <div className="rounded-2xl border border-white/10 bg-ink-800/40 backdrop-blur-sm p-4 shadow-dark-panel">
+        <div className="flex flex-col lg:flex-row gap-3 lg:items-center">
+          <div className="flex-1 min-w-0">
+            <label className="relative block">
+              <span className="sr-only">검색</span>
+              <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
+                <path d="M21 21l-4.3-4.3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              </svg>
+              <input
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="이름, 연락처 검색"
+                className="w-full rounded-xl border border-white/10 bg-ink-900/70 pl-9 pr-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-gold-400/60 focus:ring-2 focus:ring-gold-400/20 outline-none transition"
+              />
+            </label>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <FilterSelect value={statusFilter} onChange={(v) => setStatusFilter(v as "all" | Inquiry["status"])}>
+              <option value="all">상태 전체</option>
+              <option value="new">신규</option>
+              <option value="read">확인</option>
+              <option value="done">완료</option>
+            </FilterSelect>
+            <FilterSelect value={range} onChange={(v) => setRange(v as DateRange)}>
+              <option value="all">기간 전체</option>
+              <option value="7d">최근 7일</option>
+              <option value="30d">최근 30일</option>
+              <option value="90d">최근 90일</option>
+            </FilterSelect>
+            {anyFilter && (
+              <button
+                onClick={resetFilters}
+                className="rounded-full border border-white/10 px-3 py-1.5 text-xs font-medium text-slate-300 hover:border-white/25 hover:text-white transition"
+              >
+                초기화
+              </button>
+            )}
+          </div>
+          <button
+            onClick={exportCsv}
+            disabled={!filtered.length}
+            className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-gold-500 to-gold-300 px-4 py-2 text-sm font-semibold text-ink-950 shadow-gold-soft hover:shadow-gold-glow transition disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            CSV 다운로드
+          </button>
+        </div>
+        <div className="mt-3 text-xs text-slate-500">
+          {filtered.length === rows.length
+            ? `전체 ${rows.length}건`
+            : `${filtered.length}건 / 전체 ${rows.length}건`}
+        </div>
+      </div>
+
+      {!filtered.length ? (
+        <EmptyState label={rows.length ? "조건에 맞는 신청이 없습니다." : "빠른 신청이 없습니다."} />
+      ) : (
+        <div className="overflow-hidden rounded-2xl border border-white/10 bg-ink-800/40 backdrop-blur-sm shadow-dark-panel">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-ink-900/80 text-slate-400 text-left">
+                <tr>
+                  <th className="px-4 py-3 font-medium">접수일시</th>
+                  <th className="px-4 py-3 font-medium">이름</th>
+                  <th className="px-4 py-3 font-medium">연락처</th>
+                  <th className="px-4 py-3 font-medium">개인정보</th>
+                  <th className="px-4 py-3 font-medium">광고수신</th>
+                  <th className="px-4 py-3 font-medium">상태</th>
+                  <th className="px-4 py-3 font-medium">관리</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {filtered.map((r) => (
+                  <tr key={r.id} className="hover:bg-white/[0.02] transition">
+                    <td className="px-4 py-3 text-slate-400 whitespace-nowrap tabular-nums">{fmtDate(r.created_at)}</td>
+                    <td className="px-4 py-3 text-white font-medium whitespace-nowrap">{r.name}</td>
+                    <td className="px-4 py-3 text-slate-300 whitespace-nowrap tabular-nums">
+                      <a href={`tel:${r.phone}`} className="hover:text-gold-300 transition">{r.phone}</a>
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <Dot on={r.consent_privacy} />
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <Dot on={r.consent_marketing} />
+                    </td>
+                    <td className="px-4 py-3">
+                      <StatusSelect value={r.status} onChange={(s) => onStatus(r.id, s)} />
+                    </td>
+                    <td className="px-4 py-3">
+                      <button
+                        onClick={() => onDelete(r.id)}
+                        className="text-xs text-slate-500 hover:text-rose-400 transition"
+                      >
+                        삭제
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -525,7 +822,7 @@ function MonthlyResultsTable({
                   <th className="px-4 py-3 font-medium">기간</th>
                   <th className="px-4 py-3 font-medium">한달 누적 수익률</th>
                   <th className="px-4 py-3 font-medium">승률</th>
-                  <th className="px-4 py-3 font-medium">추이(포인트 수)</th>
+                  <th className="px-4 py-3 font-medium">대표 수익 종목</th>
                   <th className="px-4 py-3 font-medium">수정일</th>
                   <th className="px-4 py-3 font-medium">관리</th>
                 </tr>
@@ -536,7 +833,7 @@ function MonthlyResultsTable({
                     <td className="px-4 py-3 text-white font-medium font-display tabular-nums">{r.period}</td>
                     <td className="px-4 py-3 text-rose-300 font-semibold tabular-nums">{r.return_rate}</td>
                     <td className="px-4 py-3 text-slate-300 tabular-nums">{r.win_rate}</td>
-                    <td className="px-4 py-3 text-slate-400 tabular-nums">{r.points.length}개</td>
+                    <td className="px-4 py-3 text-gold-200">{r.top_pick || <span className="text-slate-600">—</span>}</td>
                     <td className="px-4 py-3 text-slate-500 whitespace-nowrap tabular-nums text-xs">{fmtDate(r.updated_at)}</td>
                     <td className="px-4 py-3 whitespace-nowrap">
                       <button
@@ -591,7 +888,7 @@ function MonthlyResultDialog({
   const [period, setPeriod] = useState(initial?.period || "");
   const [returnRate, setReturnRate] = useState(initial?.return_rate || "+0.0%");
   const [winRate, setWinRate] = useState(initial?.win_rate || "");
-  const [points, setPoints] = useState((initial?.points || []).join(", "));
+  const [topPick, setTopPick] = useState(initial?.top_pick || "");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -604,7 +901,7 @@ function MonthlyResultDialog({
         period: period.trim(),
         return_rate: returnRate.trim(),
         win_rate: winRate.trim(),
-        points,
+        top_pick: topPick.trim(),
       };
       const res = await fetch(
         isEdit ? `/api/admin/monthly-results/${initial!.id}` : "/api/admin/monthly-results",
@@ -679,13 +976,12 @@ function MonthlyResultDialog({
               className={dInput}
             />
           </DField>
-          <DField label="추이 포인트" hint="쉼표로 구분된 숫자 2개 이상 (예: 100, 102, 105, 108)" className="md:col-span-2">
+          <DField label="대표 수익 종목" hint="예: 삼성전자 +32%" className="md:col-span-2">
             <input
-              required
-              value={points}
-              onChange={(e) => setPoints(e.target.value)}
-              placeholder="100, 102, 105, 108, 112, 115, 119"
-              className={dInput + " tabular-nums"}
+              value={topPick}
+              onChange={(e) => setTopPick(e.target.value)}
+              placeholder="삼성전자 +32%"
+              className={dInput}
             />
           </DField>
         </div>
@@ -753,5 +1049,52 @@ function EmptyState({ label }: { label: string }) {
     <div className="rounded-2xl border border-dashed border-white/10 bg-ink-800/30 p-16 text-center text-sm text-slate-500">
       {label}
     </div>
+  );
+}
+
+function StatCard({
+  label,
+  value,
+  tone,
+}: {
+  label: string;
+  value: number;
+  tone?: "rose" | "amber" | "emerald";
+}) {
+  const toneCls =
+    tone === "rose"
+      ? "border-rose-400/30 bg-rose-500/5 text-rose-300"
+      : tone === "amber"
+      ? "border-amber-400/30 bg-amber-500/5 text-amber-300"
+      : tone === "emerald"
+      ? "border-emerald-400/30 bg-emerald-500/5 text-emerald-300"
+      : "border-white/10 bg-ink-800/40 text-white";
+  return (
+    <div className={`rounded-xl border ${toneCls} px-4 py-3 backdrop-blur-sm`}>
+      <div className="text-[11px] font-medium tracking-[0.2em] text-slate-400 uppercase">
+        {label}
+      </div>
+      <div className="mt-1 font-display text-2xl font-medium tabular-nums">{value}</div>
+    </div>
+  );
+}
+
+function FilterSelect({
+  value,
+  onChange,
+  children,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <select
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      className="rounded-full border border-white/10 bg-ink-900/70 px-3 py-1.5 text-xs font-medium text-slate-200 outline-none focus:border-gold-400/60 focus:ring-2 focus:ring-gold-400/20 transition"
+    >
+      {children}
+    </select>
   );
 }
