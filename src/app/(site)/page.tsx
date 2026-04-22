@@ -159,22 +159,22 @@ export default async function Home() {
               <a href="#services" className="btn-ghost">서비스 살펴보기</a>
             </div>
 
-            <div className="mt-16 grid grid-cols-3 max-w-xl gap-x-6 animate-fade-up" style={{ animationDelay: "0.3s" }}>
+            <div className="mt-16 grid grid-cols-3 max-w-xl gap-x-3 sm:gap-x-6 animate-fade-up" style={{ animationDelay: "0.3s" }}>
               {[
                 { k: "96%", v: "고객 만족도" },
                 { k: "1,200+", v: "누적 컨설팅" },
                 { k: "12+", v: "전문 애널리스트" },
               ].map((s) => (
-                <div key={s.v} className="relative">
-                  <div className="font-display text-3xl md:text-4xl font-medium text-gold-gradient">{s.k}</div>
-                  <div className="mt-2 text-xs md:text-sm text-slate-400 tracking-wider">{s.v}</div>
+                <div key={s.v} className="relative min-w-0">
+                  <div className="font-display text-2xl sm:text-3xl md:text-4xl font-medium text-gold-gradient tabular-nums">{s.k}</div>
+                  <div className="mt-2 text-[11px] sm:text-xs md:text-sm text-slate-400 tracking-wide">{s.v}</div>
                 </div>
               ))}
             </div>
           </div>
         </div>
 
-        <div className="absolute bottom-8 inset-x-0 flex justify-center text-gold-300/70 text-xs tracking-[0.4em]">
+        <div className="absolute bottom-8 inset-x-0 hidden sm:flex justify-center text-gold-300/70 text-xs tracking-[0.4em]">
           <div className="flex flex-col items-center gap-2 animate-shimmer">
             <span>SCROLL</span>
             <span className="block h-8 w-px bg-gradient-to-b from-gold-400/80 to-transparent" />
