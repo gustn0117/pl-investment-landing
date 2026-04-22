@@ -206,6 +206,56 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* RESULTS */}
+      <section id="results" className="py-20 md:py-28 bg-ink-900 relative">
+        <div className="absolute inset-0 bg-grid opacity-20" />
+        <div className="relative container-x">
+          <SectionHeader
+            eyebrow="MONTHLY REPORT"
+            title="월별 수익 내역"
+            description="매월 투명하게 공개되는 투자 성과를 확인해 보세요."
+          />
+          <div className="mt-14 overflow-hidden rounded-3xl border border-white/10 shadow-dark-panel bg-ink-800/40 backdrop-blur-sm">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm md:text-base">
+                <thead className="bg-gradient-to-r from-ink-800 via-ink-700 to-ink-800 text-white relative">
+                  <tr>
+                    {["기간", "한달 누적 수익률", "승률", "추이"].map((h) => (
+                      <th key={h} className="px-6 py-5 text-left font-medium tracking-wide border-b border-gold-500/20">
+                        <span className="text-gold-300 font-display tracking-[0.15em] text-xs mr-2">·</span>
+                        {h}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5">
+                  {RESULTS.map((row) => (
+                    <tr key={row.period} className="hover:bg-gold-500/5 transition">
+                      <td className="px-6 py-5 font-medium text-white font-display">{row.period}</td>
+                      <td className="px-6 py-5">
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-500/15 border border-rose-400/30 px-3.5 py-1.5 text-base font-bold text-rose-300 tabular-nums">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                            <path d="M5 15l7-7 7 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                          {row.return_rate}
+                        </span>
+                      </td>
+                      <td className="px-6 py-5 text-slate-300 font-medium tabular-nums">{row.win_rate}</td>
+                      <td className="px-6 py-5">
+                        <Sparkline points={row.points} up width={130} height={36} />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <p className="mt-6 text-center text-xs text-slate-500">
+            * 투자에는 원금 손실 위험이 있으며, 과거 수익률이 미래 수익을 보장하지 않습니다.
+          </p>
+        </div>
+      </section>
+
       {/* SERVICE HIGHLIGHTS */}
       <section className="relative py-20 md:py-28 bg-ink-950">
         <div className="absolute inset-0 bg-grid-dense opacity-40 pointer-events-none" />
@@ -357,56 +407,6 @@ export default async function Home() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* RESULTS */}
-      <section id="results" className="py-20 md:py-28 bg-ink-900 relative">
-        <div className="absolute inset-0 bg-grid opacity-20" />
-        <div className="relative container-x">
-          <SectionHeader
-            eyebrow="MONTHLY REPORT"
-            title="월별 수익 내역"
-            description="매월 투명하게 공개되는 투자 성과를 확인해 보세요."
-          />
-          <div className="mt-14 overflow-hidden rounded-3xl border border-white/10 shadow-dark-panel bg-ink-800/40 backdrop-blur-sm">
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm md:text-base">
-                <thead className="bg-gradient-to-r from-ink-800 via-ink-700 to-ink-800 text-white relative">
-                  <tr>
-                    {["기간", "한달 수익률", "승률", "추이"].map((h) => (
-                      <th key={h} className="px-6 py-5 text-left font-medium tracking-wide border-b border-gold-500/20">
-                        <span className="text-gold-300 font-display tracking-[0.15em] text-xs mr-2">·</span>
-                        {h}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-white/5">
-                  {RESULTS.map((row) => (
-                    <tr key={row.period} className="hover:bg-gold-500/5 transition">
-                      <td className="px-6 py-5 font-medium text-white font-display">{row.period}</td>
-                      <td className="px-6 py-5">
-                        <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-500/15 border border-rose-400/30 px-3.5 py-1.5 text-base font-bold text-rose-300 tabular-nums">
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-                            <path d="M5 15l7-7 7 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                          </svg>
-                          {row.return_rate}
-                        </span>
-                      </td>
-                      <td className="px-6 py-5 text-slate-300 font-medium tabular-nums">{row.win_rate}</td>
-                      <td className="px-6 py-5">
-                        <Sparkline points={row.points} up width={130} height={36} />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <p className="mt-6 text-center text-xs text-slate-500">
-            * 투자에는 원금 손실 위험이 있으며, 과거 수익률이 미래 수익을 보장하지 않습니다.
-          </p>
         </div>
       </section>
 

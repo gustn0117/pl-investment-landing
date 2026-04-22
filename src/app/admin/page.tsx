@@ -523,7 +523,7 @@ function MonthlyResultsTable({
               <thead className="bg-ink-900/80 text-slate-400 text-left">
                 <tr>
                   <th className="px-4 py-3 font-medium">기간</th>
-                  <th className="px-4 py-3 font-medium">한달 수익률</th>
+                  <th className="px-4 py-3 font-medium">한달 누적 수익률</th>
                   <th className="px-4 py-3 font-medium">승률</th>
                   <th className="px-4 py-3 font-medium">추이(포인트 수)</th>
                   <th className="px-4 py-3 font-medium">수정일</th>
@@ -661,7 +661,7 @@ function MonthlyResultDialog({
               className={dInput}
             />
           </DField>
-          <DField label="한달 수익률" hint="예: +68.4%">
+          <DField label="한달 누적 수익률" hint="예: +68.4%">
             <input
               required
               value={returnRate}
