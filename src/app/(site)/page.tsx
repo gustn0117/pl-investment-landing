@@ -214,13 +214,51 @@ export default async function Home() {
             title="월별 수익 내역"
             description="매월 투명하게 공개되는 투자 성과를 확인해 보세요."
           />
-          <div className="mt-14 overflow-hidden rounded-3xl border border-white/10 shadow-dark-panel bg-ink-800/40 backdrop-blur-sm">
+          <div className="mt-14 md:hidden space-y-3">
+            {RESULTS.map((row) => (
+              <div
+                key={row.period}
+                className="rounded-2xl border border-white/10 bg-ink-800/40 backdrop-blur-sm p-5 shadow-dark-panel"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <div className="font-display text-lg font-medium text-white tabular-nums">
+                    {row.period}
+                  </div>
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-500/15 border border-rose-400/30 px-3 py-1.5 text-sm font-bold text-rose-300 tabular-nums shrink-0">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none">
+                      <path d="M5 15l7-7 7 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    {row.return_rate}
+                  </span>
+                </div>
+                <div className="mt-4 pt-4 border-t border-white/5 flex items-center justify-between gap-3">
+                  <div className="flex items-baseline gap-1.5 shrink-0">
+                    <span className="text-[11px] font-medium tracking-[0.15em] text-slate-500 uppercase">
+                      승률
+                    </span>
+                    <span className="text-sm font-semibold text-slate-200 tabular-nums">
+                      {row.win_rate}
+                    </span>
+                  </div>
+                  {row.top_pick ? (
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-gold-500/10 border border-gold-400/30 px-2.5 py-1 text-xs font-semibold text-gold-200 min-w-0 max-w-[60%] truncate">
+                      <span className="h-1 w-1 rounded-full bg-gold-400 shrink-0" />
+                      <span className="truncate">{row.top_pick}</span>
+                    </span>
+                  ) : (
+                    <span className="text-slate-500 text-xs">대표 종목 —</span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-14 hidden md:block overflow-hidden rounded-3xl border border-white/10 shadow-dark-panel bg-ink-800/40 backdrop-blur-sm">
             <div className="overflow-x-auto">
               <table className="w-full text-sm md:text-base">
                 <thead className="bg-gradient-to-r from-ink-800 via-ink-700 to-ink-800 text-white relative">
                   <tr>
                     {["기간", "한달 누적 수익률", "승률", "대표 수익 종목"].map((h) => (
-                      <th key={h} className="px-6 py-5 text-left font-medium tracking-wide border-b border-gold-500/20">
+                      <th key={h} className="px-6 py-5 text-left font-medium tracking-wide border-b border-gold-500/20 whitespace-nowrap">
                         <span className="text-gold-300 font-display tracking-[0.15em] text-xs mr-2">·</span>
                         {h}
                       </th>
@@ -230,7 +268,7 @@ export default async function Home() {
                 <tbody className="divide-y divide-white/5">
                   {RESULTS.map((row) => (
                     <tr key={row.period} className="hover:bg-gold-500/5 transition">
-                      <td className="px-6 py-5 font-medium text-white font-display">{row.period}</td>
+                      <td className="px-6 py-5 font-medium text-white font-display whitespace-nowrap">{row.period}</td>
                       <td className="px-6 py-5">
                         <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-500/15 border border-rose-400/30 px-3.5 py-1.5 text-base font-bold text-rose-300 tabular-nums">
                           <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
@@ -239,10 +277,10 @@ export default async function Home() {
                           {row.return_rate}
                         </span>
                       </td>
-                      <td className="px-6 py-5 text-slate-300 font-medium tabular-nums">{row.win_rate}</td>
+                      <td className="px-6 py-5 text-slate-300 font-medium tabular-nums whitespace-nowrap">{row.win_rate}</td>
                       <td className="px-6 py-5">
                         {row.top_pick ? (
-                          <span className="inline-flex items-center gap-2 rounded-full bg-gold-500/10 border border-gold-400/30 px-3.5 py-1.5 text-sm font-semibold text-gold-200">
+                          <span className="inline-flex items-center gap-2 rounded-full bg-gold-500/10 border border-gold-400/30 px-3.5 py-1.5 text-sm font-semibold text-gold-200 whitespace-nowrap">
                             <span className="h-1.5 w-1.5 rounded-full bg-gold-400" />
                             {row.top_pick}
                           </span>
