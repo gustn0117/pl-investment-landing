@@ -134,7 +134,7 @@ export default function StickyBottomCTA() {
           <button
             type="submit"
             disabled={loading}
-            className="relative inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-red-600 via-rose-500 to-red-600 px-9 md:px-14 py-4 md:py-5 text-base md:text-xl font-extrabold text-white shadow-[0_15px_55px_-8px_rgba(244,63,94,0.7),inset_0_1px_0_rgba(255,255,255,0.35)] hover:shadow-[0_18px_75px_-4px_rgba(244,63,94,0.95),inset_0_1px_0_rgba(255,255,255,0.45)] hover:-translate-y-0.5 transition disabled:opacity-60 whitespace-nowrap tracking-tight animate-pulse-soft"
+            className="relative inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-red-600 via-rose-500 to-red-600 px-9 md:px-14 py-4 md:py-5 text-base md:text-xl font-extrabold text-white shadow-[0_15px_55px_-8px_rgba(244,63,94,0.7),inset_0_1px_0_rgba(255,255,255,0.35)] hover:shadow-[0_18px_75px_-4px_rgba(244,63,94,0.95),inset_0_1px_0_rgba(255,255,255,0.45)] hover:-translate-y-0.5 transition disabled:opacity-60 whitespace-nowrap tracking-tight"
           >
             <span className="absolute inset-0 rounded-full ring-2 ring-rose-200/80 pointer-events-none" />
             <span className="relative">{loading ? "전송 중..." : "무료 종목 받기"}</span>
