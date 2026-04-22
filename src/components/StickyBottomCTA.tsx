@@ -126,7 +126,7 @@ export default function StickyBottomCTA() {
               onChange={(e) => setPhone(e.target.value)}
               placeholder="휴대폰 번호"
               aria-label="휴대폰 번호"
-              pattern="[0-9\\-\\s]{9,15}"
+              inputMode="tel"
               className="flex-1 min-w-0 rounded-full bg-white border-2 border-slate-300 px-5 md:px-6 py-4 md:py-5 text-base md:text-lg text-ink-950 placeholder:text-slate-400 focus:border-gold-500 focus:ring-4 focus:ring-gold-400/25 outline-none transition"
             />
           </div>
