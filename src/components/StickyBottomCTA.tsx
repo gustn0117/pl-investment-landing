@@ -93,13 +93,13 @@ export default function StickyBottomCTA() {
 
       <div className="relative container-x py-6 md:py-8">
         {/* emphasis headline badge (gold on white) */}
-        <div className="flex justify-center mb-3 md:mb-4">
-          <div className="inline-flex items-center gap-2 rounded-full border border-gold-400/70 bg-gold-50 px-4 md:px-5 py-1.5 md:py-2 shadow-[0_0_26px_-6px_rgba(223,189,106,0.45)]">
-            <span className="relative flex h-2 w-2">
+        <div className="flex justify-center mb-4 md:mb-5">
+          <div className="inline-flex items-center gap-2.5 md:gap-3 rounded-full border-[1.5px] border-gold-400/80 bg-gold-50 px-6 md:px-8 py-2.5 md:py-3.5 shadow-[0_0_32px_-6px_rgba(223,189,106,0.55)]">
+            <span className="relative flex h-2.5 w-2.5 md:h-3 md:w-3">
               <span className="absolute inset-0 rounded-full bg-rose-500 animate-ping opacity-75" />
-              <span className="relative rounded-full h-2 w-2 bg-rose-500" />
+              <span className="relative rounded-full h-2.5 w-2.5 md:h-3 md:w-3 bg-rose-500" />
             </span>
-            <span className="text-xs md:text-sm font-bold tracking-tight text-ink-950">
+            <span className="text-sm md:text-lg font-bold tracking-tight text-ink-950">
               지금 신청 시 <span className="text-gold-700">무료 VIP 종목</span> 즉시 발송
             </span>
           </div>
@@ -134,9 +134,9 @@ export default function StickyBottomCTA() {
           <button
             type="submit"
             disabled={loading}
-            className="relative inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-gold-500 via-gold-300 to-gold-500 px-9 md:px-14 py-4 md:py-5 text-base md:text-xl font-extrabold text-ink-950 shadow-[0_15px_55px_-8px_rgba(223,189,106,0.7),inset_0_1px_0_rgba(255,255,255,0.5)] hover:shadow-[0_18px_75px_-4px_rgba(223,189,106,0.95),inset_0_1px_0_rgba(255,255,255,0.6)] hover:-translate-y-0.5 transition disabled:opacity-60 whitespace-nowrap tracking-tight animate-pulse-soft"
+            className="relative inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-red-600 via-rose-500 to-red-600 px-9 md:px-14 py-4 md:py-5 text-base md:text-xl font-extrabold text-white shadow-[0_15px_55px_-8px_rgba(244,63,94,0.7),inset_0_1px_0_rgba(255,255,255,0.35)] hover:shadow-[0_18px_75px_-4px_rgba(244,63,94,0.95),inset_0_1px_0_rgba(255,255,255,0.45)] hover:-translate-y-0.5 transition disabled:opacity-60 whitespace-nowrap tracking-tight animate-pulse-soft"
           >
-            <span className="absolute inset-0 rounded-full ring-2 ring-gold-200/70 pointer-events-none" />
+            <span className="absolute inset-0 rounded-full ring-2 ring-rose-200/80 pointer-events-none" />
             <span className="relative">{loading ? "전송 중..." : "무료 종목 받기"}</span>
             {!loading && (
               <svg className="relative" width="20" height="20" viewBox="0 0 24 24" fill="none">
