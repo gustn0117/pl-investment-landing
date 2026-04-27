@@ -46,27 +46,15 @@ export default function ThankYouPage() {
           담당자가 빠른 시일 내에 연락드리겠습니다.
         </p>
 
-        <div className="mt-10 flex flex-col sm:flex-row gap-3 justify-center">
-          <a
-            href="tel:0269533081"
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-gold-400 via-gold-300 to-gold-400 px-7 py-3.5 text-base font-bold text-ink-950 shadow-gold-glow hover:shadow-[0_0_40px_rgba(223,189,106,0.6)] hover:-translate-y-0.5 transition"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.37 1.9.72 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0122 16.92z"
-                stroke="currentColor"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            지금 바로 통화하기
-          </a>
+        <div className="mt-10 flex justify-center">
           <Link
             href="/"
-            className="inline-flex items-center justify-center gap-2 rounded-full border border-gold-400/35 bg-white/[0.03] px-7 py-3.5 text-base font-medium text-gold-200 backdrop-blur transition hover:bg-gold-400/10 hover:border-gold-300/70 hover:text-gold-100"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-gold-400 via-gold-300 to-gold-400 px-8 py-3.5 text-base font-bold text-ink-950 shadow-gold-glow hover:shadow-[0_0_40px_rgba(223,189,106,0.6)] hover:-translate-y-0.5 transition"
           >
             홈으로 돌아가기
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
           </Link>
         </div>
 
