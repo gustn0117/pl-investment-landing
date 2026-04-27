@@ -1,10 +1,11 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function StickyBottomCTA() {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
   const [consent, setConsent] = useState({ privacy: false, marketing: false });
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -37,43 +38,14 @@ export default function StickyBottomCTA() {
       const json = await res.json().catch(() => ({}));
       if (!res.ok) {
         alert(json.error || "전송에 실패했습니다.");
+        setLoading(false);
         return;
       }
-      setSubmitted(true);
+      router.push("/thank-you");
     } catch {
       alert("네트워크 오류가 발생했습니다.");
-    } finally {
       setLoading(false);
     }
-  }
-
-  if (submitted) {
-    return (
-      <div className="fixed bottom-0 inset-x-0 z-40 bg-white border-t-2 border-gold-400/80 shadow-[0_-30px_80px_-20px_rgba(0,0,0,0.35)]">
-        <div className="container-x py-7 md:py-9 flex flex-col sm:flex-row items-center justify-center gap-4">
-          <span className="grid place-items-center h-11 w-11 rounded-full bg-gradient-to-br from-gold-400 to-gold-600 text-white shrink-0 shadow-gold-glow">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-              <path d="M5 12l5 5L20 7" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </span>
-          <span className="text-base md:text-lg font-medium text-ink-950 text-center">
-            신청이 접수되었습니다. 빠른 시일 내에 담당자가 연락드리겠습니다.
-          </span>
-          <button
-            type="button"
-            onClick={() => {
-              setSubmitted(false);
-              setName("");
-              setPhone("");
-              setConsent({ privacy: false, marketing: false });
-            }}
-            className="rounded-full border border-gold-500/70 px-5 py-2.5 text-sm font-semibold text-gold-700 hover:bg-gold-50 hover:border-gold-600 transition"
-          >
-            새로 신청
-          </button>
-        </div>
-      </div>
-    );
   }
 
   return (

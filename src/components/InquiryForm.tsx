@@ -1,11 +1,12 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const TYPES = ["투자 상담", "포트폴리오 점검", "제휴 문의", "기타 문의"];
 
 export default function InquiryForm() {
-  const [submitted, setSubmitted] = useState(false);
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -30,38 +31,14 @@ export default function InquiryForm() {
       const json = await res.json().catch(() => ({}));
       if (!res.ok) {
         setError(json.error || "전송에 실패했습니다. 잠시 후 다시 시도해 주세요.");
+        setLoading(false);
         return;
       }
-      setSubmitted(true);
+      router.push("/thank-you");
     } catch {
       setError("네트워크 오류가 발생했습니다.");
-    } finally {
       setLoading(false);
     }
-  }
-
-  if (submitted) {
-    return (
-      <div className="rounded-3xl border border-gold-400/40 bg-ink-800/60 backdrop-blur-sm p-10 md:p-14 text-center shadow-dark-panel">
-        <span className="grid place-items-center mx-auto h-16 w-16 rounded-full bg-gradient-to-br from-gold-400 to-gold-600 text-ink-950 shadow-gold-glow">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-            <path d="M5 12l5 5L20 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </span>
-        <h3 className="mt-6 font-display text-2xl md:text-3xl font-medium text-white">
-          문의가 접수되었습니다
-        </h3>
-        <p className="mt-3 text-base text-slate-400">
-          빠른 시일 내에 담당자가 연락드리겠습니다. 감사합니다.
-        </p>
-        <button
-          onClick={() => setSubmitted(false)}
-          className="mt-8 inline-flex rounded-full border border-gold-400/60 px-6 py-2.5 text-sm font-medium text-gold-300 hover:bg-gold-400 hover:text-ink-950 transition"
-        >
-          새 문의 작성
-        </button>
-      </div>
-    );
   }
 
   return (
