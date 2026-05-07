@@ -33,13 +33,6 @@ const HIGHLIGHTS = [
   },
 ];
 
-const VALUES = [
-  { n: "01", t: "깊이 있는 시장 분석", d: "시장 구조와 산업의 흐름을 체계적으로 분석하여, 단순한 정보 전달이 아닌 가치 있는 투자 아이디어를 제시합니다." },
-  { n: "02", t: "데이터 기반 의사결정", d: "기업의 펀더멘털을 체계적으로 분석하여 현재 주가의 흐름을 정확하게 파악하고, 냉정한 데이터 분석을 기반으로 판단합니다." },
-  { n: "03", t: "투자자와 함께 성장", d: "투자자들이 더 나은 투자 판단을 할 수 있도록 돕는 것이 우리의 목표이며, 함께 성장하는 파트너가 되겠습니다." },
-  { n: "04", t: "포트폴리오 전략 점검", d: "시장 흐름을 반영해 구조를 점검하고 효율적인 운용 전략을 제안합니다." },
-];
-
 const PHILOSOPHY = [
   { n: "01", t: "체계적인 시장 분석", d: "기업의 펀더멘털을 체계적으로 분석하여 현재 주가의 흐름을 정확하게 파악하고, 투자자에게 신뢰할 수 있는 분석을 제공합니다." },
   { n: "02", t: "포트폴리오 전략 점검", d: "시장 흐름을 반영해 효율적인 운용 전략과 수익 가능성을 높이는 투자 방향을 제시합니다." },
@@ -323,30 +316,6 @@ export default async function Home() {
                 <div className="mt-1 text-sm font-medium text-gold-300">{h.desc}</div>
                 <div className="mt-4 h-px bg-gradient-to-r from-gold-400/50 via-gold-500/30 to-transparent" />
                 <p className="mt-4 text-sm leading-relaxed text-slate-400">{h.body}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* OUR VALUES */}
-      <section className="relative py-20 md:py-28 bg-ink-950">
-        <div className="absolute inset-0 bg-grid-dense opacity-30" />
-        <div className="relative container-x">
-          <SectionHeader
-            eyebrow="OUR VALUES"
-            title="흔들리지 않는 원칙과 철학"
-            description="수많은 변수와 노이즈 속에서도 냉정한 데이터 분석과 경험을 기반으로 투자의 본질에 집중합니다."
-          />
-          <div className="mt-14 grid gap-px bg-white/[0.04] md:grid-cols-2 rounded-3xl overflow-hidden border border-white/10 shadow-dark-panel">
-            {VALUES.map((v) => (
-              <div key={v.n} className="bg-ink-900/60 backdrop-blur-sm p-8 md:p-10 hover:bg-ink-800/60 transition group">
-                <div className="flex items-baseline gap-4">
-                  <span className="font-display text-4xl font-light text-gold-400/40 group-hover:text-gold-400 transition">{v.n}</span>
-                  <h3 className="text-lg md:text-xl font-medium text-white">{v.t}</h3>
-                </div>
-                <div className="mt-3 h-px w-12 bg-gradient-to-r from-gold-400 to-transparent" />
-                <p className="mt-4 text-sm md:text-base leading-relaxed text-slate-400 font-light">{v.d}</p>
               </div>
             ))}
           </div>
