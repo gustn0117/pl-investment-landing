@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase";
+import { validatePhone } from "@/lib/phone";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const ALLOWED_TYPES = ["투자 상담", "포트폴리오 점검", "제휴 문의", "기타 문의"];
+const DUP_WINDOW_HOURS = 24;
 
 function sanitize(s: unknown, max = 1000) {
   if (typeof s !== "string") return "";
@@ -14,22 +16,52 @@ function sanitize(s: unknown, max = 1000) {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
+
+    // honeypot
+    if (sanitize(body.website, 200)) {
+      return NextResponse.json({ ok: true });
+    }
+
     const name = sanitize(body.name, 50);
-    const phone = sanitize(body.phone, 30);
+    const phoneRaw = sanitize(body.phone, 30);
     const email = sanitize(body.email, 200);
     const type = sanitize(body.type, 50);
     const message = sanitize(body.message, 4000);
 
-    if (!name || !phone || !type || !message) {
+    if (!name || !type || !message) {
       return NextResponse.json({ error: "필수 항목이 누락됐습니다." }, { status: 400 });
+    }
+    const phoneCheck = validatePhone(phoneRaw);
+    if (!phoneCheck.ok) {
+      return NextResponse.json({ error: phoneCheck.error }, { status: 400 });
     }
     if (!ALLOWED_TYPES.includes(type)) {
       return NextResponse.json({ error: "잘못된 문의 유형입니다." }, { status: 400 });
     }
 
-    const { error } = await supabaseAdmin()
+    const since = new Date(Date.now() - DUP_WINDOW_HOURS * 60 * 60 * 1000).toISOString();
+    const { data: existing } = await supabaseAdmin()
       .from("inquiries")
-      .insert({ name, phone, email: email || null, type, message });
+      .select("id")
+      .eq("phone_norm", phoneCheck.normalized)
+      .gte("created_at", since)
+      .limit(1);
+
+    if (existing && existing.length > 0) {
+      return NextResponse.json(
+        { error: "이미 동일한 번호로 문의하셨습니다. 잠시 후 다시 시도해 주세요." },
+        { status: 409 }
+      );
+    }
+
+    const { error } = await supabaseAdmin().from("inquiries").insert({
+      name,
+      phone: phoneRaw,
+      phone_norm: phoneCheck.normalized,
+      email: email || null,
+      type,
+      message,
+    });
 
     if (error) {
       console.error("inquiry insert", error);

@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { validatePhone } from "@/lib/phone";
 
 export default function StickyBottomCTA() {
   const router = useRouter();
@@ -9,6 +10,7 @@ export default function StickyBottomCTA() {
   const [consent, setConsent] = useState({ privacy: false, marketing: false });
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [website, setWebsite] = useState(""); // honeypot
 
   const allAgreed = consent.privacy && consent.marketing;
 
@@ -19,6 +21,15 @@ export default function StickyBottomCTA() {
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!name.trim()) {
+      alert("이름을 입력해 주세요.");
+      return;
+    }
+    const check = validatePhone(phone);
+    if (!check.ok) {
+      alert(check.error);
+      return;
+    }
     if (!consent.privacy || !consent.marketing) {
       alert("필수 약관에 동의해 주세요.");
       return;
@@ -31,6 +42,7 @@ export default function StickyBottomCTA() {
         body: JSON.stringify({
           name,
           phone,
+          website,
           consent_privacy: consent.privacy,
           consent_marketing: consent.marketing,
         }),
@@ -96,10 +108,22 @@ export default function StickyBottomCTA() {
               type="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              placeholder="휴대폰 번호"
+              placeholder="휴대폰 번호 (예: 010-1234-5678)"
               aria-label="휴대폰 번호"
-              inputMode="tel"
+              inputMode="numeric"
+              autoComplete="tel"
+              maxLength={15}
               className="flex-1 min-w-0 rounded-full bg-white border-2 border-slate-300 px-5 md:px-6 py-4 md:py-5 text-base md:text-lg text-ink-950 placeholder:text-slate-400 focus:border-gold-500 focus:ring-4 focus:ring-gold-400/25 outline-none transition"
+            />
+            <input
+              type="text"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              value={website}
+              onChange={(e) => setWebsite(e.target.value)}
+              name="website"
+              className="absolute -left-[9999px] h-0 w-0 opacity-0"
             />
           </div>
 

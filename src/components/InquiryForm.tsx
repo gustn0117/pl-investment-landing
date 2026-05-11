@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { validatePhone } from "@/lib/phone";
 
 const TYPES = ["투자 상담", "포트폴리오 점검", "제휴 문의", "기타 문의"];
 
@@ -20,7 +21,17 @@ export default function InquiryForm() {
       email: String(fd.get("email") || ""),
       type: String(fd.get("type") || ""),
       message: String(fd.get("message") || ""),
+      website: String(fd.get("website") || ""),
     };
+    if (!payload.name.trim()) {
+      setError("이름을 입력해 주세요.");
+      return;
+    }
+    const check = validatePhone(payload.phone);
+    if (!check.ok) {
+      setError(check.error);
+      return;
+    }
     setLoading(true);
     try {
       const res = await fetch("/api/inquiry", {
@@ -53,12 +64,29 @@ export default function InquiryForm() {
             "linear-gradient(90deg, transparent, rgba(223,189,106,0.6), transparent)",
         }}
       />
+      <input
+        type="text"
+        name="website"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="absolute -left-[9999px] h-0 w-0 opacity-0"
+      />
       <div className="grid gap-5 md:grid-cols-2">
         <Field label="이름" required>
           <input name="name" type="text" required className={inputCls} placeholder="홍길동" />
         </Field>
         <Field label="연락처" required>
-          <input name="phone" type="tel" required className={inputCls} placeholder="010-0000-0000" />
+          <input
+            name="phone"
+            type="tel"
+            required
+            inputMode="numeric"
+            autoComplete="tel"
+            maxLength={15}
+            className={inputCls}
+            placeholder="010-0000-0000"
+          />
         </Field>
         <Field label="이메일" className="md:col-span-2">
           <input name="email" type="email" className={inputCls} placeholder="example@email.com" />
