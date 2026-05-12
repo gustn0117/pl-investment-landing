@@ -76,12 +76,21 @@ function downloadCsv(filename: string, content: string) {
   URL.revokeObjectURL(url);
 }
 
-type DateRange = "all" | "7d" | "30d" | "90d";
-function withinRange(iso: string, range: DateRange) {
+type DateRange = "all" | "7d" | "30d" | "90d" | "custom";
+function withinRange(iso: string, range: DateRange, customFrom = "", customTo = "") {
   if (range === "all") return true;
+  const t = new Date(iso).getTime();
+  if (range === "custom") {
+    const from = customFrom ? new Date(`${customFrom}T00:00:00`).getTime() : -Infinity;
+    const to = customTo ? new Date(`${customTo}T23:59:59.999`).getTime() : Infinity;
+    return t >= from && t <= to;
+  }
   const days = range === "7d" ? 7 : range === "30d" ? 30 : 90;
-  return Date.now() - new Date(iso).getTime() <= days * 24 * 60 * 60 * 1000;
+  return Date.now() - t <= days * 24 * 60 * 60 * 1000;
 }
+
+const dateInputCls =
+  "rounded-full border border-white/10 bg-ink-900/70 px-3 py-1.5 text-xs font-medium text-slate-200 outline-none focus:border-gold-400/60 focus:ring-2 focus:ring-gold-400/20 transition [color-scheme:dark]";
 
 export default function AdminPage() {
   const [authed, setAuthed] = useState<boolean | null>(null);
@@ -382,6 +391,8 @@ function InquiryTable({
   const [statusFilter, setStatusFilter] = useState<"all" | Inquiry["status"]>("all");
   const [typeFilter, setTypeFilter] = useState<string>("all");
   const [range, setRange] = useState<DateRange>("all");
+  const [customFrom, setCustomFrom] = useState("");
+  const [customTo, setCustomTo] = useState("");
 
   const types = useMemo(() => {
     const set = new Set<string>();
@@ -394,7 +405,7 @@ function InquiryTable({
     return rows.filter((r) => {
       if (statusFilter !== "all" && r.status !== statusFilter) return false;
       if (typeFilter !== "all" && r.type !== typeFilter) return false;
-      if (!withinRange(r.created_at, range)) return false;
+      if (!withinRange(r.created_at, range, customFrom, customTo)) return false;
       if (!q) return true;
       return (
         r.name.toLowerCase().includes(q) ||
@@ -404,7 +415,7 @@ function InquiryTable({
         r.message.toLowerCase().includes(q)
       );
     });
-  }, [rows, query, statusFilter, typeFilter, range]);
+  }, [rows, query, statusFilter, typeFilter, range, customFrom, customTo]);
 
   const stats = useMemo(
     () => ({
@@ -435,6 +446,8 @@ function InquiryTable({
     setStatusFilter("all");
     setTypeFilter("all");
     setRange("all");
+    setCustomFrom("");
+    setCustomTo("");
   }
 
   const anyFilter =
@@ -487,7 +500,29 @@ function InquiryTable({
               <option value="7d">최근 7일</option>
               <option value="30d">최근 30일</option>
               <option value="90d">최근 90일</option>
+              <option value="custom">직접 선택</option>
             </FilterSelect>
+            {range === "custom" && (
+              <div className="flex items-center gap-1.5">
+                <input
+                  type="date"
+                  value={customFrom}
+                  max={customTo || undefined}
+                  onChange={(e) => setCustomFrom(e.target.value)}
+                  className={dateInputCls}
+                  aria-label="조회 시작일"
+                />
+                <span className="text-xs text-slate-500">~</span>
+                <input
+                  type="date"
+                  value={customTo}
+                  min={customFrom || undefined}
+                  onChange={(e) => setCustomTo(e.target.value)}
+                  className={dateInputCls}
+                  aria-label="조회 종료일"
+                />
+              </div>
+            )}
             {anyFilter && (
               <button
                 onClick={resetFilters}
@@ -620,16 +655,18 @@ function LeadTable({
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | Inquiry["status"]>("all");
   const [range, setRange] = useState<DateRange>("all");
+  const [customFrom, setCustomFrom] = useState("");
+  const [customTo, setCustomTo] = useState("");
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return rows.filter((r) => {
       if (statusFilter !== "all" && r.status !== statusFilter) return false;
-      if (!withinRange(r.created_at, range)) return false;
+      if (!withinRange(r.created_at, range, customFrom, customTo)) return false;
       if (!q) return true;
       return r.name.toLowerCase().includes(q) || r.phone.toLowerCase().includes(q);
     });
-  }, [rows, query, statusFilter, range]);
+  }, [rows, query, statusFilter, range, customFrom, customTo]);
 
   const stats = useMemo(
     () => ({
@@ -658,6 +695,8 @@ function LeadTable({
     setQuery("");
     setStatusFilter("all");
     setRange("all");
+    setCustomFrom("");
+    setCustomTo("");
   }
 
   const anyFilter = query.trim() !== "" || statusFilter !== "all" || range !== "all";
@@ -701,7 +740,29 @@ function LeadTable({
               <option value="7d">최근 7일</option>
               <option value="30d">최근 30일</option>
               <option value="90d">최근 90일</option>
+              <option value="custom">직접 선택</option>
             </FilterSelect>
+            {range === "custom" && (
+              <div className="flex items-center gap-1.5">
+                <input
+                  type="date"
+                  value={customFrom}
+                  max={customTo || undefined}
+                  onChange={(e) => setCustomFrom(e.target.value)}
+                  className={dateInputCls}
+                  aria-label="조회 시작일"
+                />
+                <span className="text-xs text-slate-500">~</span>
+                <input
+                  type="date"
+                  value={customTo}
+                  min={customFrom || undefined}
+                  onChange={(e) => setCustomTo(e.target.value)}
+                  className={dateInputCls}
+                  aria-label="조회 종료일"
+                />
+              </div>
+            )}
             {anyFilter && (
               <button
                 onClick={resetFilters}
