@@ -11,10 +11,10 @@ export function validatePhone(raw: string): PhoneCheck {
   if (digits.length === 0) {
     return { ok: false, error: "휴대폰 번호를 입력해 주세요." };
   }
-  if (digits.length < 10 || digits.length > 11) {
-    return { ok: false, error: "휴대폰 번호는 10~11자리여야 합니다." };
+  if (digits.length !== 11) {
+    return { ok: false, error: "휴대폰 번호는 11자리여야 합니다. (예: 010-1234-5678)" };
   }
-  if (!digits.startsWith("0")) {
+  if (!digits.startsWith("01")) {
     return { ok: false, error: "올바른 형식의 휴대폰 번호를 입력해 주세요." };
   }
   return { ok: true, normalized: digits };
