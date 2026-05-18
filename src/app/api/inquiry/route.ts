@@ -39,8 +39,22 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "잘못된 문의 유형입니다." }, { status: 400 });
     }
 
+    const supa = supabaseAdmin();
+
+    const { data: blocked } = await supa
+      .from("blocked_phones")
+      .select("id")
+      .eq("phone_norm", phoneCheck.normalized)
+      .limit(1);
+    if (blocked && blocked.length > 0) {
+      return NextResponse.json(
+        { error: "신청에 일시적인 문제가 발생했습니다. 잠시 후 다시 시도해 주세요." },
+        { status: 403 }
+      );
+    }
+
     const since = new Date(Date.now() - DUP_WINDOW_HOURS * 60 * 60 * 1000).toISOString();
-    const { data: existing } = await supabaseAdmin()
+    const { data: existing } = await supa
       .from("inquiries")
       .select("id")
       .eq("phone_norm", phoneCheck.normalized)
@@ -54,7 +68,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const { error } = await supabaseAdmin().from("inquiries").insert({
+    const { error } = await supa.from("inquiries").insert({
       name,
       phone: phoneRaw,
       phone_norm: phoneCheck.normalized,

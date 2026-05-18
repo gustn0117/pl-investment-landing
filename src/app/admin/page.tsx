@@ -33,7 +33,14 @@ type MonthlyResult = {
   updated_at: string;
 };
 
-type Tab = "inquiries" | "leads" | "results";
+type BlockedPhone = {
+  id: number;
+  phone_norm: string;
+  note: string | null;
+  created_at: string;
+};
+
+type Tab = "inquiries" | "leads" | "results" | "blocked";
 const STATUSES: Array<Inquiry["status"]> = ["new", "read", "done"];
 const STATUS_LABEL: Record<Inquiry["status"], string> = {
   new: "신규",
@@ -44,6 +51,13 @@ const STATUS_LABEL: Record<Inquiry["status"], string> = {
 function fmtDate(iso: string) {
   const d = new Date(iso);
   return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")} ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+}
+
+function fmtPhone(digits: string) {
+  if (!digits) return "";
+  if (digits.length === 11) return `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7)}`;
+  if (digits.length === 10) return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6)}`;
+  return digits;
 }
 
 function fileTimestamp() {
@@ -195,24 +209,50 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [leads, setLeads] = useState<Lead[]>([]);
   const [results, setResults] = useState<MonthlyResult[]>([]);
+  const [blocked, setBlocked] = useState<BlockedPhone[]>([]);
   const [loading, setLoading] = useState(false);
   const [expanded, setExpanded] = useState<number | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const [i, l, r] = await Promise.all([
+      const [i, l, r, b] = await Promise.all([
         fetch("/api/admin/inquiries", { cache: "no-store" }),
         fetch("/api/admin/leads", { cache: "no-store" }),
         fetch("/api/admin/monthly-results", { cache: "no-store" }),
+        fetch("/api/admin/blocked-phones", { cache: "no-store" }),
       ]);
       if (i.ok) setInquiries((await i.json()).data || []);
       if (l.ok) setLeads((await l.json()).data || []);
       if (r.ok) setResults((await r.json()).data || []);
+      if (b.ok) setBlocked((await b.json()).data || []);
     } finally {
       setLoading(false);
     }
   }, []);
+
+  const blockedSet = useMemo(() => new Set(blocked.map((b) => b.phone_norm)), [blocked]);
+
+  async function blockPhone(phone: string, note: string) {
+    const res = await fetch("/api/admin/blocked-phones", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ phone, note }),
+    });
+    const j = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      alert(j.error || "차단 등록 실패");
+      return false;
+    }
+    if (j.data) setBlocked((arr) => [j.data, ...arr]);
+    return true;
+  }
+
+  async function unblockPhone(id: number) {
+    if (!confirm("이 번호의 차단을 해제하시겠습니까?")) return;
+    const res = await fetch(`/api/admin/blocked-phones/${id}`, { method: "DELETE" });
+    if (res.ok) setBlocked((arr) => arr.filter((x) => x.id !== id));
+  }
 
   useEffect(() => {
     load();
@@ -248,7 +288,12 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
     onLogout();
   }
 
-  const tabCount = { inquiries: inquiries.length, leads: leads.length, results: results.length };
+  const tabCount = {
+    inquiries: inquiries.length,
+    leads: leads.length,
+    results: results.length,
+    blocked: blocked.length,
+  };
   const newCount = {
     inquiries: inquiries.filter((x) => x.status === "new").length,
     leads: leads.filter((x) => x.status === "new").length,
@@ -285,6 +330,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
             { key: "inquiries" as Tab, label: "문의하기" },
             { key: "leads" as Tab, label: "빠른 신청" },
             { key: "results" as Tab, label: "월별 수익" },
+            { key: "blocked" as Tab, label: "차단 번호" },
           ]).map((t) => {
             const active = tab === t.key;
             const n = t.key === "inquiries" ? newCount.inquiries : t.key === "leads" ? newCount.leads : 0;
@@ -322,16 +368,20 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
           <InquiryTable
             rows={inquiries}
             expanded={expanded}
+            blockedSet={blockedSet}
             onToggle={(id) => setExpanded((cur) => (cur === id ? null : id))}
             onStatus={(id, s) => updateStatus("inquiries", id, s)}
             onDelete={(id) => remove("inquiries", id)}
+            onBlock={blockPhone}
           />
         )}
         {!loading && tab === "leads" && (
           <LeadTable
             rows={leads}
+            blockedSet={blockedSet}
             onStatus={(id, s) => updateStatus("leads", id, s)}
             onDelete={(id) => remove("leads", id)}
+            onBlock={blockPhone}
           />
         )}
         {!loading && tab === "results" && (
@@ -339,6 +389,13 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
             rows={results}
             onReload={load}
             onDelete={(id) => remove("monthly-results", id)}
+          />
+        )}
+        {!loading && tab === "blocked" && (
+          <BlockedPhonesTable
+            rows={blocked}
+            onAdd={blockPhone}
+            onDelete={unblockPhone}
           />
         )}
       </main>
@@ -377,15 +434,19 @@ function StatusSelect({
 function InquiryTable({
   rows,
   expanded,
+  blockedSet,
   onToggle,
   onStatus,
   onDelete,
+  onBlock,
 }: {
   rows: Inquiry[];
   expanded: number | null;
+  blockedSet: Set<string>;
   onToggle: (id: number) => void;
   onStatus: (id: number, s: Inquiry["status"]) => void;
   onDelete: (id: number) => void;
+  onBlock: (phone: string, note: string) => Promise<boolean>;
 }) {
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | Inquiry["status"]>("all");
@@ -574,9 +635,11 @@ function InquiryTable({
                     key={r.id}
                     r={r}
                     expanded={expanded === r.id}
+                    isBlocked={blockedSet.has(r.phone.replace(/\D/g, ""))}
                     onToggle={() => onToggle(r.id)}
                     onStatus={(s) => onStatus(r.id, s)}
                     onDelete={() => onDelete(r.id)}
+                    onBlock={onBlock}
                   />
                 ))}
               </tbody>
@@ -591,23 +654,36 @@ function InquiryTable({
 function InquiryRow({
   r,
   expanded,
+  isBlocked,
   onToggle,
   onStatus,
   onDelete,
+  onBlock,
 }: {
   r: Inquiry;
   expanded: boolean;
+  isBlocked: boolean;
   onToggle: () => void;
   onStatus: (s: Inquiry["status"]) => void;
   onDelete: () => void;
+  onBlock: (phone: string, note: string) => Promise<boolean>;
 }) {
+  async function handleBlock() {
+    if (!confirm(`${r.name} (${r.phone}) 번호를 차단하시겠습니까?\n차단 후 이 번호로는 신청이 불가능합니다.`)) return;
+    await onBlock(r.phone, `${r.name} (문의) 차단`);
+  }
   return (
     <>
-      <tr className="hover:bg-white/[0.02] transition">
+      <tr className={`hover:bg-white/[0.02] transition ${isBlocked ? "bg-rose-500/[0.04]" : ""}`}>
         <td className="px-4 py-3 text-slate-400 whitespace-nowrap tabular-nums">{fmtDate(r.created_at)}</td>
         <td className="px-4 py-3 text-white font-medium whitespace-nowrap">{r.name}</td>
         <td className="px-4 py-3 text-slate-300 whitespace-nowrap tabular-nums">
           <a href={`tel:${r.phone}`} className="hover:text-gold-300 transition">{r.phone}</a>
+          {isBlocked && (
+            <span className="ml-2 inline-flex items-center rounded-full bg-rose-500/15 border border-rose-400/30 px-2 py-0.5 text-[10px] font-semibold text-rose-300">
+              차단됨
+            </span>
+          )}
         </td>
         <td className="px-4 py-3 text-slate-400 whitespace-nowrap">
           {r.email ? <a href={`mailto:${r.email}`} className="hover:text-gold-300 transition">{r.email}</a> : "-"}
@@ -621,7 +697,16 @@ function InquiryRow({
         <td className="px-4 py-3">
           <StatusSelect value={r.status} onChange={onStatus} />
         </td>
-        <td className="px-4 py-3">
+        <td className="px-4 py-3 whitespace-nowrap">
+          {!isBlocked && (
+            <button
+              onClick={handleBlock}
+              className="text-xs text-rose-300/80 hover:text-rose-300 transition mr-3"
+              title="이 번호로의 신청을 차단합니다"
+            >
+              차단
+            </button>
+          )}
           <button
             onClick={onDelete}
             className="text-xs text-slate-500 hover:text-rose-400 transition"
@@ -645,12 +730,16 @@ function InquiryRow({
 
 function LeadTable({
   rows,
+  blockedSet,
   onStatus,
   onDelete,
+  onBlock,
 }: {
   rows: Lead[];
+  blockedSet: Set<string>;
   onStatus: (id: number, s: Inquiry["status"]) => void;
   onDelete: (id: number) => void;
+  onBlock: (phone: string, note: string) => Promise<boolean>;
 }) {
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | Inquiry["status"]>("all");
@@ -808,32 +897,51 @@ function LeadTable({
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
-                {filtered.map((r) => (
-                  <tr key={r.id} className="hover:bg-white/[0.02] transition">
-                    <td className="px-4 py-3 text-slate-400 whitespace-nowrap tabular-nums">{fmtDate(r.created_at)}</td>
-                    <td className="px-4 py-3 text-white font-medium whitespace-nowrap">{r.name}</td>
-                    <td className="px-4 py-3 text-slate-300 whitespace-nowrap tabular-nums">
-                      <a href={`tel:${r.phone}`} className="hover:text-gold-300 transition">{r.phone}</a>
-                    </td>
-                    <td className="px-4 py-3 text-center">
-                      <Dot on={r.consent_privacy} />
-                    </td>
-                    <td className="px-4 py-3 text-center">
-                      <Dot on={r.consent_marketing} />
-                    </td>
-                    <td className="px-4 py-3">
-                      <StatusSelect value={r.status} onChange={(s) => onStatus(r.id, s)} />
-                    </td>
-                    <td className="px-4 py-3">
-                      <button
-                        onClick={() => onDelete(r.id)}
-                        className="text-xs text-slate-500 hover:text-rose-400 transition"
-                      >
-                        삭제
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                {filtered.map((r) => {
+                  const isBlocked = blockedSet.has(r.phone.replace(/\D/g, ""));
+                  return (
+                    <tr key={r.id} className={`hover:bg-white/[0.02] transition ${isBlocked ? "bg-rose-500/[0.04]" : ""}`}>
+                      <td className="px-4 py-3 text-slate-400 whitespace-nowrap tabular-nums">{fmtDate(r.created_at)}</td>
+                      <td className="px-4 py-3 text-white font-medium whitespace-nowrap">{r.name}</td>
+                      <td className="px-4 py-3 text-slate-300 whitespace-nowrap tabular-nums">
+                        <a href={`tel:${r.phone}`} className="hover:text-gold-300 transition">{r.phone}</a>
+                        {isBlocked && (
+                          <span className="ml-2 inline-flex items-center rounded-full bg-rose-500/15 border border-rose-400/30 px-2 py-0.5 text-[10px] font-semibold text-rose-300">
+                            차단됨
+                          </span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        <Dot on={r.consent_privacy} />
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        <Dot on={r.consent_marketing} />
+                      </td>
+                      <td className="px-4 py-3">
+                        <StatusSelect value={r.status} onChange={(s) => onStatus(r.id, s)} />
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        {!isBlocked && (
+                          <button
+                            onClick={async () => {
+                              if (!confirm(`${r.name} (${r.phone}) 번호를 차단하시겠습니까?\n차단 후 이 번호로는 신청이 불가능합니다.`)) return;
+                              await onBlock(r.phone, `${r.name} (빠른 신청) 차단`);
+                            }}
+                            className="text-xs text-rose-300/80 hover:text-rose-300 transition mr-3"
+                          >
+                            차단
+                          </button>
+                        )}
+                        <button
+                          onClick={() => onDelete(r.id)}
+                          className="text-xs text-slate-500 hover:text-rose-400 transition"
+                        >
+                          삭제
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -1109,6 +1217,106 @@ function EmptyState({ label }: { label: string }) {
   return (
     <div className="rounded-2xl border border-dashed border-white/10 bg-ink-800/30 p-16 text-center text-sm text-slate-500">
       {label}
+    </div>
+  );
+}
+
+function BlockedPhonesTable({
+  rows,
+  onAdd,
+  onDelete,
+}: {
+  rows: BlockedPhone[];
+  onAdd: (phone: string, note: string) => Promise<boolean>;
+  onDelete: (id: number) => void;
+}) {
+  const [phone, setPhone] = useState("");
+  const [note, setNote] = useState("");
+  const [adding, setAdding] = useState(false);
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    if (adding) return;
+    setAdding(true);
+    const ok = await onAdd(phone, note);
+    if (ok) {
+      setPhone("");
+      setNote("");
+    }
+    setAdding(false);
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="rounded-2xl border border-white/10 bg-ink-800/40 backdrop-blur-sm p-5 shadow-dark-panel">
+        <h3 className="font-display text-base font-medium text-white">번호 차단 등록</h3>
+        <p className="mt-1 text-xs text-slate-500">
+          여기 등록한 번호는 빠른 신청 / 문의 폼 모두에서 신청이 즉시 거부됩니다. 11자리 휴대폰 번호만 등록 가능합니다.
+        </p>
+        <form onSubmit={submit} className="mt-4 flex flex-col sm:flex-row gap-2">
+          <input
+            type="tel"
+            inputMode="numeric"
+            maxLength={15}
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="010-1234-5678"
+            required
+            className="flex-1 rounded-xl border border-white/10 bg-ink-900/70 px-4 py-2 text-sm text-white placeholder:text-slate-500 focus:border-gold-400/60 focus:ring-2 focus:ring-gold-400/20 outline-none transition"
+          />
+          <input
+            type="text"
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            placeholder="메모 (예: 반복 신청, 비정상 패턴)"
+            maxLength={200}
+            className="flex-1 rounded-xl border border-white/10 bg-ink-900/70 px-4 py-2 text-sm text-white placeholder:text-slate-500 focus:border-gold-400/60 focus:ring-2 focus:ring-gold-400/20 outline-none transition"
+          />
+          <button
+            type="submit"
+            disabled={adding}
+            className="inline-flex items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-rose-500 to-rose-400 px-5 py-2 text-sm font-semibold text-white shadow-[0_8px_25px_-8px_rgba(244,63,94,0.6)] hover:shadow-[0_10px_35px_-5px_rgba(244,63,94,0.8)] transition disabled:opacity-60 whitespace-nowrap"
+          >
+            {adding ? "등록 중..." : "차단 등록"}
+          </button>
+        </form>
+      </div>
+
+      {!rows.length ? (
+        <EmptyState label="차단된 번호가 없습니다." />
+      ) : (
+        <div className="overflow-hidden rounded-2xl border border-white/10 bg-ink-800/40 backdrop-blur-sm shadow-dark-panel">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-ink-900/80 text-slate-400 text-left">
+                <tr>
+                  <th className="px-4 py-3 font-medium">차단일시</th>
+                  <th className="px-4 py-3 font-medium">번호</th>
+                  <th className="px-4 py-3 font-medium">메모</th>
+                  <th className="px-4 py-3 font-medium">관리</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {rows.map((r) => (
+                  <tr key={r.id} className="hover:bg-white/[0.02] transition">
+                    <td className="px-4 py-3 text-slate-400 whitespace-nowrap tabular-nums">{fmtDate(r.created_at)}</td>
+                    <td className="px-4 py-3 text-rose-200 font-medium whitespace-nowrap tabular-nums">{fmtPhone(r.phone_norm)}</td>
+                    <td className="px-4 py-3 text-slate-300">{r.note || <span className="text-slate-600">—</span>}</td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <button
+                        onClick={() => onDelete(r.id)}
+                        className="text-xs text-gold-300 hover:text-gold-200 transition"
+                      >
+                        차단 해제
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
