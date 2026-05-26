@@ -44,7 +44,14 @@ type BlockedPhone = {
   created_at: string;
 };
 
-type Tab = "inquiries" | "leads" | "results" | "blocked";
+type BlockedIp = {
+  id: number;
+  ip: string;
+  note: string | null;
+  created_at: string;
+};
+
+type Tab = "inquiries" | "leads" | "results" | "blocked" | "blocked-ips";
 const STATUSES: Array<Inquiry["status"]> = ["new", "read", "done"];
 const STATUS_LABEL: Record<Inquiry["status"], string> = {
   new: "신규",
@@ -214,28 +221,32 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [results, setResults] = useState<MonthlyResult[]>([]);
   const [blocked, setBlocked] = useState<BlockedPhone[]>([]);
+  const [blockedIps, setBlockedIps] = useState<BlockedIp[]>([]);
   const [loading, setLoading] = useState(false);
   const [expanded, setExpanded] = useState<number | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const [i, l, r, b] = await Promise.all([
+      const [i, l, r, b, bi] = await Promise.all([
         fetch("/api/admin/inquiries", { cache: "no-store" }),
         fetch("/api/admin/leads", { cache: "no-store" }),
         fetch("/api/admin/monthly-results", { cache: "no-store" }),
         fetch("/api/admin/blocked-phones", { cache: "no-store" }),
+        fetch("/api/admin/blocked-ips", { cache: "no-store" }),
       ]);
       if (i.ok) setInquiries((await i.json()).data || []);
       if (l.ok) setLeads((await l.json()).data || []);
       if (r.ok) setResults((await r.json()).data || []);
       if (b.ok) setBlocked((await b.json()).data || []);
+      if (bi.ok) setBlockedIps((await bi.json()).data || []);
     } finally {
       setLoading(false);
     }
   }, []);
 
   const blockedSet = useMemo(() => new Set(blocked.map((b) => b.phone_norm)), [blocked]);
+  const blockedIpsSet = useMemo(() => new Set(blockedIps.map((b) => b.ip)), [blockedIps]);
 
   async function blockPhone(phone: string, note: string) {
     const res = await fetch("/api/admin/blocked-phones", {
@@ -256,6 +267,27 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
     if (!confirm("이 번호의 차단을 해제하시겠습니까?")) return;
     const res = await fetch(`/api/admin/blocked-phones/${id}`, { method: "DELETE" });
     if (res.ok) setBlocked((arr) => arr.filter((x) => x.id !== id));
+  }
+
+  async function blockIp(ip: string, note: string) {
+    const res = await fetch("/api/admin/blocked-ips", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ip, note }),
+    });
+    const j = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      alert(j.error || "IP 차단 등록 실패");
+      return false;
+    }
+    if (j.data) setBlockedIps((arr) => [j.data, ...arr]);
+    return true;
+  }
+
+  async function unblockIp(id: number) {
+    if (!confirm("이 IP의 차단을 해제하시겠습니까?")) return;
+    const res = await fetch(`/api/admin/blocked-ips/${id}`, { method: "DELETE" });
+    if (res.ok) setBlockedIps((arr) => arr.filter((x) => x.id !== id));
   }
 
   useEffect(() => {
@@ -297,6 +329,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
     leads: leads.length,
     results: results.length,
     blocked: blocked.length,
+    "blocked-ips": blockedIps.length,
   };
   const newCount = {
     inquiries: inquiries.filter((x) => x.status === "new").length,
@@ -335,6 +368,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
             { key: "leads" as Tab, label: "빠른 신청" },
             { key: "results" as Tab, label: "월별 수익" },
             { key: "blocked" as Tab, label: "차단 번호" },
+            { key: "blocked-ips" as Tab, label: "차단 IP" },
           ]).map((t) => {
             const active = tab === t.key;
             const n = t.key === "inquiries" ? newCount.inquiries : t.key === "leads" ? newCount.leads : 0;
@@ -373,19 +407,23 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
             rows={inquiries}
             expanded={expanded}
             blockedSet={blockedSet}
+            blockedIpsSet={blockedIpsSet}
             onToggle={(id) => setExpanded((cur) => (cur === id ? null : id))}
             onStatus={(id, s) => updateStatus("inquiries", id, s)}
             onDelete={(id) => remove("inquiries", id)}
             onBlock={blockPhone}
+            onBlockIp={blockIp}
           />
         )}
         {!loading && tab === "leads" && (
           <LeadTable
             rows={leads}
             blockedSet={blockedSet}
+            blockedIpsSet={blockedIpsSet}
             onStatus={(id, s) => updateStatus("leads", id, s)}
             onDelete={(id) => remove("leads", id)}
             onBlock={blockPhone}
+            onBlockIp={blockIp}
           />
         )}
         {!loading && tab === "results" && (
@@ -400,6 +438,13 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
             rows={blocked}
             onAdd={blockPhone}
             onDelete={unblockPhone}
+          />
+        )}
+        {!loading && tab === "blocked-ips" && (
+          <BlockedIpsTable
+            rows={blockedIps}
+            onAdd={blockIp}
+            onDelete={unblockIp}
           />
         )}
       </main>
@@ -439,18 +484,22 @@ function InquiryTable({
   rows,
   expanded,
   blockedSet,
+  blockedIpsSet,
   onToggle,
   onStatus,
   onDelete,
   onBlock,
+  onBlockIp,
 }: {
   rows: Inquiry[];
   expanded: number | null;
   blockedSet: Set<string>;
+  blockedIpsSet: Set<string>;
   onToggle: (id: number) => void;
   onStatus: (id: number, s: Inquiry["status"]) => void;
   onDelete: (id: number) => void;
   onBlock: (phone: string, note: string) => Promise<boolean>;
+  onBlockIp: (ip: string, note: string) => Promise<boolean>;
 }) {
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | Inquiry["status"]>("all");
@@ -642,10 +691,12 @@ function InquiryTable({
                     r={r}
                     expanded={expanded === r.id}
                     isBlocked={blockedSet.has(r.phone.replace(/\D/g, ""))}
+                    isIpBlocked={r.ip ? blockedIpsSet.has(r.ip) : false}
                     onToggle={() => onToggle(r.id)}
                     onStatus={(s) => onStatus(r.id, s)}
                     onDelete={() => onDelete(r.id)}
                     onBlock={onBlock}
+                    onBlockIp={onBlockIp}
                   />
                 ))}
               </tbody>
@@ -661,22 +712,31 @@ function InquiryRow({
   r,
   expanded,
   isBlocked,
+  isIpBlocked,
   onToggle,
   onStatus,
   onDelete,
   onBlock,
+  onBlockIp,
 }: {
   r: Inquiry;
   expanded: boolean;
   isBlocked: boolean;
+  isIpBlocked: boolean;
   onToggle: () => void;
   onStatus: (s: Inquiry["status"]) => void;
   onDelete: () => void;
   onBlock: (phone: string, note: string) => Promise<boolean>;
+  onBlockIp: (ip: string, note: string) => Promise<boolean>;
 }) {
   async function handleBlock() {
     if (!confirm(`${r.name} (${r.phone}) 번호를 차단하시겠습니까?\n차단 후 이 번호로는 신청이 불가능합니다.`)) return;
     await onBlock(r.phone, `${r.name} (문의) 차단`);
+  }
+  async function handleBlockIp() {
+    if (!r.ip) return;
+    if (!confirm(`IP ${r.ip}을(를) 차단하시겠습니까?\n차단 후 이 IP에서는 신청이 불가능합니다.`)) return;
+    await onBlockIp(r.ip, `${r.name} (문의) IP 차단`);
   }
   return (
     <>
@@ -693,8 +753,21 @@ function InquiryRow({
             )}
           </div>
           {r.ip && (
-            <div className="text-[10px] text-slate-500 font-mono tabular-nums mt-0.5" title={r.user_agent || undefined}>
-              IP {r.ip}
+            <div className="flex items-center gap-1.5 mt-0.5" title={r.user_agent || undefined}>
+              <span className="text-[10px] text-slate-500 font-mono tabular-nums">IP {r.ip}</span>
+              {isIpBlocked ? (
+                <span className="inline-flex items-center rounded-full bg-rose-500/15 border border-rose-400/30 px-1.5 py-0.5 text-[9px] font-semibold text-rose-300">
+                  차단됨
+                </span>
+              ) : (
+                <button
+                  onClick={handleBlockIp}
+                  className="text-[10px] text-rose-300/70 hover:text-rose-300 transition"
+                  title="이 IP에서의 신청을 차단합니다"
+                >
+                  차단
+                </button>
+              )}
             </div>
           )}
         </td>
@@ -744,15 +817,19 @@ function InquiryRow({
 function LeadTable({
   rows,
   blockedSet,
+  blockedIpsSet,
   onStatus,
   onDelete,
   onBlock,
+  onBlockIp,
 }: {
   rows: Lead[];
   blockedSet: Set<string>;
+  blockedIpsSet: Set<string>;
   onStatus: (id: number, s: Inquiry["status"]) => void;
   onDelete: (id: number) => void;
   onBlock: (phone: string, note: string) => Promise<boolean>;
+  onBlockIp: (ip: string, note: string) => Promise<boolean>;
 }) {
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | Inquiry["status"]>("all");
@@ -914,8 +991,9 @@ function LeadTable({
               <tbody className="divide-y divide-white/5">
                 {filtered.map((r) => {
                   const isBlocked = blockedSet.has(r.phone.replace(/\D/g, ""));
+                  const isIpBlocked = r.ip ? blockedIpsSet.has(r.ip) : false;
                   return (
-                    <tr key={r.id} className={`hover:bg-white/[0.02] transition ${isBlocked ? "bg-rose-500/[0.04]" : ""}`}>
+                    <tr key={r.id} className={`hover:bg-white/[0.02] transition ${isBlocked || isIpBlocked ? "bg-rose-500/[0.04]" : ""}`}>
                       <td className="px-4 py-3 text-slate-400 whitespace-nowrap tabular-nums">{fmtDate(r.created_at)}</td>
                       <td className="px-4 py-3 text-white font-medium whitespace-nowrap">{r.name}</td>
                       <td className="px-4 py-3 whitespace-nowrap">
@@ -928,8 +1006,23 @@ function LeadTable({
                           )}
                         </div>
                         {r.ip && (
-                          <div className="text-[10px] text-slate-500 font-mono tabular-nums mt-0.5" title={r.user_agent || undefined}>
-                            IP {r.ip}
+                          <div className="flex items-center gap-1.5 mt-0.5" title={r.user_agent || undefined}>
+                            <span className="text-[10px] text-slate-500 font-mono tabular-nums">IP {r.ip}</span>
+                            {isIpBlocked ? (
+                              <span className="inline-flex items-center rounded-full bg-rose-500/15 border border-rose-400/30 px-1.5 py-0.5 text-[9px] font-semibold text-rose-300">
+                                차단됨
+                              </span>
+                            ) : (
+                              <button
+                                onClick={async () => {
+                                  if (!confirm(`IP ${r.ip}을(를) 차단하시겠습니까?\n차단 후 이 IP에서는 신청이 불가능합니다.`)) return;
+                                  await onBlockIp(r.ip!, `${r.name} (빠른 신청) IP 차단`);
+                                }}
+                                className="text-[10px] text-rose-300/70 hover:text-rose-300 transition"
+                              >
+                                차단
+                              </button>
+                            )}
                           </div>
                         )}
                       </td>
@@ -1239,6 +1332,104 @@ function EmptyState({ label }: { label: string }) {
   return (
     <div className="rounded-2xl border border-dashed border-white/10 bg-ink-800/30 p-16 text-center text-sm text-slate-500">
       {label}
+    </div>
+  );
+}
+
+function BlockedIpsTable({
+  rows,
+  onAdd,
+  onDelete,
+}: {
+  rows: BlockedIp[];
+  onAdd: (ip: string, note: string) => Promise<boolean>;
+  onDelete: (id: number) => void;
+}) {
+  const [ip, setIp] = useState("");
+  const [note, setNote] = useState("");
+  const [adding, setAdding] = useState(false);
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    if (adding) return;
+    setAdding(true);
+    const ok = await onAdd(ip, note);
+    if (ok) {
+      setIp("");
+      setNote("");
+    }
+    setAdding(false);
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="rounded-2xl border border-white/10 bg-ink-800/40 backdrop-blur-sm p-5 shadow-dark-panel">
+        <h3 className="font-display text-base font-medium text-white">IP 차단 등록</h3>
+        <p className="mt-1 text-xs text-slate-500">
+          여기 등록한 IP는 빠른 신청 / 문의 폼 모두에서 신청이 즉시 거부됩니다. IPv4 또는 IPv6 형식으로 입력해 주세요.
+        </p>
+        <form onSubmit={submit} className="mt-4 flex flex-col sm:flex-row gap-2">
+          <input
+            type="text"
+            value={ip}
+            onChange={(e) => setIp(e.target.value)}
+            placeholder="221.160.197.2"
+            required
+            className="flex-1 rounded-xl border border-white/10 bg-ink-900/70 px-4 py-2 text-sm text-white placeholder:text-slate-500 focus:border-gold-400/60 focus:ring-2 focus:ring-gold-400/20 outline-none transition font-mono tabular-nums"
+          />
+          <input
+            type="text"
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            placeholder="메모 (예: 도배 IP, 어뷰징 의심)"
+            maxLength={200}
+            className="flex-1 rounded-xl border border-white/10 bg-ink-900/70 px-4 py-2 text-sm text-white placeholder:text-slate-500 focus:border-gold-400/60 focus:ring-2 focus:ring-gold-400/20 outline-none transition"
+          />
+          <button
+            type="submit"
+            disabled={adding}
+            className="inline-flex items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-rose-500 to-rose-400 px-5 py-2 text-sm font-semibold text-white shadow-[0_8px_25px_-8px_rgba(244,63,94,0.6)] hover:shadow-[0_10px_35px_-5px_rgba(244,63,94,0.8)] transition disabled:opacity-60 whitespace-nowrap"
+          >
+            {adding ? "등록 중..." : "차단 등록"}
+          </button>
+        </form>
+      </div>
+
+      {!rows.length ? (
+        <EmptyState label="차단된 IP가 없습니다." />
+      ) : (
+        <div className="overflow-hidden rounded-2xl border border-white/10 bg-ink-800/40 backdrop-blur-sm shadow-dark-panel">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-ink-900/80 text-slate-400 text-left">
+                <tr>
+                  <th className="px-4 py-3 font-medium">차단일시</th>
+                  <th className="px-4 py-3 font-medium">IP</th>
+                  <th className="px-4 py-3 font-medium">메모</th>
+                  <th className="px-4 py-3 font-medium">관리</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {rows.map((r) => (
+                  <tr key={r.id} className="hover:bg-white/[0.02] transition">
+                    <td className="px-4 py-3 text-slate-400 whitespace-nowrap tabular-nums">{fmtDate(r.created_at)}</td>
+                    <td className="px-4 py-3 text-rose-200 font-mono font-medium whitespace-nowrap tabular-nums">{r.ip}</td>
+                    <td className="px-4 py-3 text-slate-300">{r.note || <span className="text-slate-600">—</span>}</td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <button
+                        onClick={() => onDelete(r.id)}
+                        className="text-xs text-gold-300 hover:text-gold-200 transition"
+                      >
+                        차단 해제
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

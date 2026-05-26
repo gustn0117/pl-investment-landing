@@ -39,6 +39,7 @@ export async function POST(req: Request) {
     }
 
     const supa = supabaseAdmin();
+    const clientIp = getClientIp(req);
 
     const { data: blocked } = await supa
       .from("blocked_phones")
@@ -50,6 +51,20 @@ export async function POST(req: Request) {
         { error: "신청에 일시적인 문제가 발생했습니다. 잠시 후 다시 시도해 주세요." },
         { status: 403 }
       );
+    }
+
+    if (clientIp) {
+      const { data: ipBlocked } = await supa
+        .from("blocked_ips")
+        .select("id")
+        .eq("ip", clientIp)
+        .limit(1);
+      if (ipBlocked && ipBlocked.length > 0) {
+        return NextResponse.json(
+          { error: "신청에 일시적인 문제가 발생했습니다. 잠시 후 다시 시도해 주세요." },
+          { status: 403 }
+        );
+      }
     }
 
     const since = new Date(Date.now() - DUP_WINDOW_HOURS * 60 * 60 * 1000).toISOString();
@@ -73,7 +88,7 @@ export async function POST(req: Request) {
       phone_norm: phoneCheck.normalized,
       consent_privacy: privacy,
       consent_marketing: marketing,
-      ip: getClientIp(req),
+      ip: clientIp,
       user_agent: getUserAgent(req),
     });
 
