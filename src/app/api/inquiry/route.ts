@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase";
 import { validatePhone } from "@/lib/phone";
+import { getClientIp, getUserAgent } from "@/lib/request";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -75,6 +76,8 @@ export async function POST(req: Request) {
       email: email || null,
       type,
       message,
+      ip: getClientIp(req),
+      user_agent: getUserAgent(req),
     });
 
     if (error) {

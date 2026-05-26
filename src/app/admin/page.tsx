@@ -10,6 +10,8 @@ type Inquiry = {
   type: string;
   message: string;
   status: "new" | "read" | "done";
+  ip: string | null;
+  user_agent: string | null;
   created_at: string;
 };
 
@@ -20,6 +22,8 @@ type Lead = {
   consent_privacy: boolean;
   consent_marketing: boolean;
   status: "new" | "read" | "done";
+  ip: string | null;
+  user_agent: string | null;
   created_at: string;
 };
 
@@ -489,7 +493,7 @@ function InquiryTable({
   );
 
   function exportCsv() {
-    const headers = ["접수일시", "이름", "연락처", "이메일", "유형", "내용", "상태"];
+    const headers = ["접수일시", "이름", "연락처", "이메일", "유형", "내용", "상태", "IP", "User-Agent"];
     const body = filtered.map((r) => [
       fmtDate(r.created_at),
       r.name,
@@ -498,6 +502,8 @@ function InquiryTable({
       r.type,
       r.message,
       STATUS_LABEL[r.status],
+      r.ip ?? "",
+      r.user_agent ?? "",
     ]);
     downloadCsv(`inquiries_${fileTimestamp()}.csv`, toCsv(headers, body));
   }
@@ -677,12 +683,19 @@ function InquiryRow({
       <tr className={`hover:bg-white/[0.02] transition ${isBlocked ? "bg-rose-500/[0.04]" : ""}`}>
         <td className="px-4 py-3 text-slate-400 whitespace-nowrap tabular-nums">{fmtDate(r.created_at)}</td>
         <td className="px-4 py-3 text-white font-medium whitespace-nowrap">{r.name}</td>
-        <td className="px-4 py-3 text-slate-300 whitespace-nowrap tabular-nums">
-          <a href={`tel:${r.phone}`} className="hover:text-gold-300 transition">{r.phone}</a>
-          {isBlocked && (
-            <span className="ml-2 inline-flex items-center rounded-full bg-rose-500/15 border border-rose-400/30 px-2 py-0.5 text-[10px] font-semibold text-rose-300">
-              차단됨
-            </span>
+        <td className="px-4 py-3 whitespace-nowrap">
+          <div className="flex items-center gap-2">
+            <a href={`tel:${r.phone}`} className="text-slate-300 hover:text-gold-300 transition tabular-nums">{r.phone}</a>
+            {isBlocked && (
+              <span className="inline-flex items-center rounded-full bg-rose-500/15 border border-rose-400/30 px-2 py-0.5 text-[10px] font-semibold text-rose-300">
+                차단됨
+              </span>
+            )}
+          </div>
+          {r.ip && (
+            <div className="text-[10px] text-slate-500 font-mono tabular-nums mt-0.5" title={r.user_agent || undefined}>
+              IP {r.ip}
+            </div>
           )}
         </td>
         <td className="px-4 py-3 text-slate-400 whitespace-nowrap">
@@ -768,7 +781,7 @@ function LeadTable({
   );
 
   function exportCsv() {
-    const headers = ["접수일시", "이름", "연락처", "개인정보 동의", "광고 수신 동의", "상태"];
+    const headers = ["접수일시", "이름", "연락처", "개인정보 동의", "광고 수신 동의", "상태", "IP", "User-Agent"];
     const body = filtered.map((r) => [
       fmtDate(r.created_at),
       r.name,
@@ -776,6 +789,8 @@ function LeadTable({
       r.consent_privacy ? "Y" : "N",
       r.consent_marketing ? "Y" : "N",
       STATUS_LABEL[r.status],
+      r.ip ?? "",
+      r.user_agent ?? "",
     ]);
     downloadCsv(`leads_${fileTimestamp()}.csv`, toCsv(headers, body));
   }
@@ -903,12 +918,19 @@ function LeadTable({
                     <tr key={r.id} className={`hover:bg-white/[0.02] transition ${isBlocked ? "bg-rose-500/[0.04]" : ""}`}>
                       <td className="px-4 py-3 text-slate-400 whitespace-nowrap tabular-nums">{fmtDate(r.created_at)}</td>
                       <td className="px-4 py-3 text-white font-medium whitespace-nowrap">{r.name}</td>
-                      <td className="px-4 py-3 text-slate-300 whitespace-nowrap tabular-nums">
-                        <a href={`tel:${r.phone}`} className="hover:text-gold-300 transition">{r.phone}</a>
-                        {isBlocked && (
-                          <span className="ml-2 inline-flex items-center rounded-full bg-rose-500/15 border border-rose-400/30 px-2 py-0.5 text-[10px] font-semibold text-rose-300">
-                            차단됨
-                          </span>
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        <div className="flex items-center gap-2">
+                          <a href={`tel:${r.phone}`} className="text-slate-300 hover:text-gold-300 transition tabular-nums">{r.phone}</a>
+                          {isBlocked && (
+                            <span className="inline-flex items-center rounded-full bg-rose-500/15 border border-rose-400/30 px-2 py-0.5 text-[10px] font-semibold text-rose-300">
+                              차단됨
+                            </span>
+                          )}
+                        </div>
+                        {r.ip && (
+                          <div className="text-[10px] text-slate-500 font-mono tabular-nums mt-0.5" title={r.user_agent || undefined}>
+                            IP {r.ip}
+                          </div>
                         )}
                       </td>
                       <td className="px-4 py-3 text-center">
